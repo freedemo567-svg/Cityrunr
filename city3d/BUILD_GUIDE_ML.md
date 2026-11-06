@@ -1,19 +1,41 @@
 <!-- coderabbit-ai-generated:v1 -->
 
-<!-- coderabbit-ai-generated-section:v1:d1e643f6d351abf48fa445ec3d12d96979dc01bc596e7b29c82b23fc6dce9e23 -->
+<!-- coderabbit-ai-generated-section:v1:1f8941d0eb4f16c65b0c32ff7b4e3c65261da60660b49df158d528c71a6e88a5 -->
 
 # City Run 3D — മലയാളം setup guide
 
 ## നിലവിലെ project
 
-ഈ repository-യിലെ `city3d` ആണ് നിലവിലെ game project. Town, Kerala geographic drive, ആറു vehicle categories, character selection, പുതിയ building/vehicle rendering എന്നിവ ഇതിൽ ഉൾപ്പെടുന്നു.
+ഈ repository-യിലെ `city3d` ആണ് നിലവിലെ game project. Kerala geographic drive, on-foot exploration, ആറു vehicle categories, character selection, പുതിയ building/vehicle rendering എന്നിവ ഇതിൽ ഉൾപ്പെടുന്നു.
 
 - **GARAGE → VEHICLE:** sports car, motorcycle, auto, city bus, cargo van, lorry. വാഹനം നിർത്തിയശേഷം മാറ്റുക.
-- **GARAGE → CHARACTER:** male/female presentation മാറ്റാം; Town-ൽ on-foot play ലഭ്യമാണ്.
-- **GARAGE → REAL MAP DRIVE:** നഗരം/ഗ്രാമം search ചെയ്ത് mapped road-ലേക്ക് പോകാം. **TOWN** മറ്റൊരു active game mode-ലേക്ക് മടക്കുന്നു.
+- **GARAGE → CHARACTER:** male/female presentation മാറ്റാം; Kerala map-ൽ on-foot play ലഭ്യമാണ്.
+- Game നേരിട്ട് Kerala map-ൽ തുറക്കും. നഗരം/ഗ്രാമം search ചെയ്ത് mapped road-ലേക്ക് പോകാം. Town mode നീക്കി.
+- **ENTER / EXIT (E):** വാഹനം നിർത്തിയശേഷം ഇറങ്ങാം; സമീപത്തെ വാഹനത്തിൽ തിരികെ കയറാം. Arrow keys / WALK buttons കൊണ്ട് നടക്കാം; Shift / SPRINT കൊണ്ട് ഓടാം.
+- Progressive brakes, speed-sensitive steering, braking body pitch എന്നിവ ചേർത്തു. Kerala position/progress auto-save ചെയ്യും.
 - Terrain flat ആണ്; buildings mapped outlines പിന്തുടരുന്നു. Facade details, trees, roofs എന്നിവ illustrative ആണ്. പൂർണ photorealistic Kerala reconstruction അല്ല.
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:1702090cf061505901eaaa9551c435919024270b427c4845910bc148ff0bb141 -->
+
+## Driving controls
+
+Steering wheel drag ചെയ്ത് തിരിക്കാം. Brake/accelerator pedal അമർത്തിയാൽ full input ലഭിക്കും. അമർത്തിപ്പിടിച്ച് താഴേക്ക് slide ചെയ്താൽ input കുറയും; മുകളിലേക്ക് തിരിച്ചാൽ കൂടും. ഒരേസമയം steering, brake, accelerator ഉപയോഗിക്കാം. Pedal-ൽ നിന്ന് വിരൽ ദൂരേക്ക് മാറ്റിയാൽ അത് release ചെയ്യും. Desktop-ൽ mouse drag അല്ലെങ്കിൽ arrow keys ഉപയോഗിക്കാം. Gear D/R വാഹനം നിർത്തിയശേഷം മാത്രം മാറ്റാം. Pause/background/exit held inputs reset ചെയ്യും.
+
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:8bfdfbb27df4e108f485588855f54e828049e9ec123b97c539c24cf07e38c6a9 -->
+
+## Example buildings
+
+Search box-ൽ building type നൽകുക (ഉദാഹരണം `Hospital`), `Example:` result തിരഞ്ഞെടുത്ത് വാഹനം നിർത്തിയശേഷം **GO** അമർത്തുക. ആവശ്യപ്പെട്ട 100 building തരങ്ങൾ ഏഴ് Kerala city പ്രദേശങ്ങളിലായി ഉൾപ്പെടുത്തിയിട്ടുണ്ട്. ഇവ game സൃഷ്ടിച്ച illustrative exterior കെട്ടിടങ്ങളാണ്; യഥാർത്ഥ സ്ഥാപനങ്ങളുടെ പേരോ സ്ഥാനമോ അല്ല. Interiors/സ്ഥാപനങ്ങളുടെ പ്രവർത്തനങ്ങൾ ഇല്ല. വലിയ സ്ഥാപനങ്ങൾ compact examples ആണ്; underground bunker-ന് surface entrance ആണ് കാണിക്കുക.
+
 ## Source തുറക്കുക
+
+<!-- /coderabbit-ai-generated:v1 -->
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 1. നിലവിലെ repository clone ചെയ്യുക, അല്ലെങ്കിൽ repository source ZIP download ചെയ്ത് **Extract All** ചെയ്യുക.
 2. Repository-ക്കുള്ളിലെ **city3d** folder തുറക്കുക. അതിനുള്ളിൽ `project.godot`, `tools`, `assets`, `.vscode`, `tests` എന്നിവ ഉണ്ടാകണം.
@@ -118,9 +140,6 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.android" | Out-Null
 
 ## പരിശോധനയുടെ പരിധി
 
-ഈ source-ന്റെ gameplay പരിശോധനകൾ Linux-ൽ നടത്തിയിട്ടുണ്ട്. ഈ cleanup-ൽ APK build/signature, Windows, Android ഫോൺ പരിശോധനകൾ നടത്തിയിട്ടില്ല. ഫോണിലെ touch controls, graphics, audio, performance എന്നിവ device-ൽ പരീക്ഷിക്കണം.
-
-
-
+ഈ source-ന്റെ gameplay പരിശോധനകൾ Linux-ൽ നടത്തിയിട്ടുണ്ട്. ഈ മാറ്റത്തിൽ APK build/signature, Windows, Android ഫോൺ പരിശോധനകൾ നടത്തിയിട്ടില്ല. ഫോണിലെ touch controls, graphics, audio, performance എന്നിവ device-ൽ പരീക്ഷിക്കണം.
 
 <!-- /coderabbit-ai-generated:v1 -->

@@ -58,6 +58,10 @@ static func buildings(entries: Array, origin: Vector3) -> ArrayMesh:
         var height: float=entry[2]
         var wall_color: Color=WALL_COLORS[posmod(int(entry[0]),WALL_COLORS.size())]
         var roof: Color=ROOF_COLORS[posmod(int(entry[0]),ROOF_COLORS.size())]
+        if entry.size()>3 and entry[3] is Dictionary:
+            var palette={"residential":"d8c6a9","office":"aabfc0","civic":"d6d6c8","transport":"aeb9b7","vehicle":"d3d0c4","retail":"d8c8b1","leisure":"c3cdcc","industrial":"9fa9a4","rural":"c4ad91","landmark":"cfc7ae","worship":"e4d9c0","media":"b1bdbe","secret":"929e92"}
+            wall_color=Color(palette.get(entry[3].category,"d6c7aa"))
+            roof=Color("747e7b")
         for i in range(polygon.size()):
             var p: Vector2=polygon[i]
             var q: Vector2=polygon[(i+1)%polygon.size()]

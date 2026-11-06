@@ -1,10 +1,10 @@
 <!-- coderabbit-ai-generated:v1 -->
 
-<!-- coderabbit-ai-generated-section:v1:e154b219679c4be430e62b4d41913b296287aeaeadfb1c26b3311144857f304a -->
+<!-- coderabbit-ai-generated-section:v1:2c5caf5c9f4ea1d15fd4fab494a4855082083770ba96ab28cb08928676c2b6a3 -->
 
 # City Run 3D
 
-The current game is in [city3d/](city3d/README.md). Open that folder in Godot 4.3 Standard or VS Code. It contains the latest vehicle rendering, building facades, character selection, Town mode and Kerala geographic drive.
+The current game is in [city3d/](city3d/README.md). Open that folder in Godot 4.3 Standard or VS Code. It contains the latest vehicle rendering, building facades, character selection, on-foot exploration and Kerala geographic drive.
 
 ## Project files
 
@@ -27,6 +27,5 @@ node city3d/tools/project.mjs run
 For Android export, follow the Malayalam guide. The current export uses Godot's Android preset and produces `city3d/build/city-run-3d.apk`.
 
 The game remains a prototype with flat geographic terrain and illustrative scenery. Phone performance, touch and audible audio need device verification.
-
 
 <!-- /coderabbit-ai-generated:v1 -->
