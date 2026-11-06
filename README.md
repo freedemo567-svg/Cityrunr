@@ -1,38 +1,32 @@
 <!-- coderabbit-ai-generated:v1 -->
 
-<!-- coderabbit-ai-generated:v1 -->
+<!-- coderabbit-ai-generated-section:v1:e154b219679c4be430e62b4d41913b296287aeaeadfb1c26b3311144857f304a -->
 
-<!-- coderabbit-ai-generated-section:v1:28b251c3260b085ae28e01f29b122cbbbf378e5081d4ab53707f43d65e326312 -->
+# City Run 3D
 
-<!-- coderabbit-ai-generated:v1 -->
+The current game is in [city3d/](city3d/README.md). Open that folder in Godot 4.3 Standard or VS Code. It contains the latest vehicle rendering, building facades, character selection, Town mode and Kerala geographic drive.
 
-<!-- coderabbit-ai-generated-section:v1:3a56b7a24bfe7b0fa076433e50886121e51cddca455be9862e4b98f555eb6c95 -->
+## Project files
 
-<!-- coderabbit-ai-generated:v1 -->
+- [Game source and asset credits](city3d/README.md)
+- [Malayalam setup and Android build guide](city3d/BUILD_GUIDE_ML.md)
+- [Godot project](city3d/project.godot)
+- [Run, test and build commands](city3d/tools/project.mjs)
 
-<!-- coderabbit-ai-generated-section:v1:836acbc4fd8411c90108e96b4f11e868a74debb565c6cd8474f49475a0777ae6 -->
+Kerala map data is included under `city3d/assets/kerala/tiles/`; no separate data ZIP is required for this checkout. Keep the complete `city3d` folder, including assets, licence files, tools and tests.
 
-# City Run
+## Run
 
-## City Run 3D
+Set `GODOT_BIN` to a Godot 4.3 Standard executable. From the repository root:
 
-The current Kerala driving prototype is in [`city3d/`](city3d/README.md). The repository includes its Kerala map tiles; when cloning this repository, the separate data ZIPs mentioned in the guide are not needed. For a Windows setup and Android APK build, open `city3d` in VS Code and follow [the Malayalam guide](city3d/BUILD_GUIDE_ML.md) from “ഘട്ടം 1”. The geographic world and vehicle models are still a prototype; see the 3D README for their limitations and data credits.
+```sh
+"$GODOT_BIN" --headless --path city3d --editor --import
+node city3d/tools/project.mjs run
+```
 
-## Original Android project
+For Android export, follow the Malayalam guide. The current export uses Godot's Android preset and produces `city3d/build/city-run-3d.apk`.
 
-<!-- /coderabbit-ai-generated:v1 -->
+The game remains a prototype with flat geographic terrain and illustrative scenery. Phone performance, touch and audible audio need device verification.
 
-City Run is an offline top-down Android city game. Explore on foot or enter the red car, follow the minimap to pick up packages and deliver them for cash. Three delivery routes repeat. Buildings block movement, and progress is stored on the device.
-
-## Build
-
-Use JDK 17 and Android SDK platform 35, then run `./gradlew assembleDebug`. The debug APK is generated at `app/build/outputs/apk/debug/app-debug.apk`. Android 7.0 (API 24) or later is required.
-
-## Game rule tests
-
-Run `mkdir -p /tmp/city-test && javac -d /tmp/city-test app/src/main/java/com/jungletrail/game/GameModel.java tests/GameModelTest.java && java -cp /tmp/city-test GameModelTest`.
-
-
-<!-- /coderabbit-ai-generated:v1 -->
 
 <!-- /coderabbit-ai-generated:v1 -->

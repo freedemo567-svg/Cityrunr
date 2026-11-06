@@ -30,6 +30,7 @@ var yaw := 0.0
 var road_count := 0
 var ground: MeshInstance3D
 var train: Node3D
+var details: Node3D
 func mat(color: Color) -> StandardMaterial3D:
     var m:=StandardMaterial3D.new()
     m.albedo_color=color
@@ -39,7 +40,7 @@ func mat(color: Color) -> StandardMaterial3D:
 func _ready():
     var sun:=DirectionalLight3D.new()
     sun.rotation_degrees=Vector3(-50,-30,0)
-    sun.light_energy=1.1
+    sun.light_energy=0.85
     sun.shadow_enabled=true
     sun.directional_shadow_max_distance=65.0
     add_child(sun)
@@ -47,25 +48,25 @@ func _ready():
     var settings:=Environment.new()
     settings.background_mode=Environment.BG_SKY
     var atmosphere:=Sky.new()
-    var gradient:=ProceduralSkyMaterial.new()
-    gradient.sky_top_color=Color("648fa9")
-    gradient.sky_horizon_color=Color("d4e0dd")
-    gradient.ground_horizon_color=Color("c5d1c6")
-    gradient.ground_bottom_color=Color("627361")
-    atmosphere.sky_material=gradient
+    var panorama:=PanoramaSkyMaterial.new()
+    panorama.energy_multiplier=0.6
+    panorama.panorama=preload("res://assets/atmosphere/daylight.hdr")
+    atmosphere.sky_material=panorama
     settings.sky=atmosphere
-    settings.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR
+    settings.tonemap_mode=Environment.TONE_MAPPER_FILMIC
+    settings.ambient_light_source=Environment.AMBIENT_SOURCE_SKY
     settings.ambient_light_color=Color("c7d0ca")
-    settings.ambient_light_energy=0.7
+    settings.ambient_light_energy=0.45
+    settings.fog_enabled=true
+    settings.fog_light_color=Color("b6c9cb")
+    settings.fog_density=0.0012
     env.environment=settings
     add_child(env)
     ground=MeshInstance3D.new()
     var plane:=PlaneMesh.new()
     plane.size=Vector2(12000,12000)
     ground.mesh=plane
-    var grass:=ShaderMaterial.new()
-    grass.shader=preload("res://geographic_ground.gdshader")
-    ground.material_override=grass
+    ground.material_override=preload("res://surface_materials.gd").ground()
     ground.position.y=-0.05
     add_child(ground)
     car=Node3D.new()
@@ -74,6 +75,9 @@ func _ready():
     train=Node3D.new()
     train.set_script(preload("res://geographic_train.gd"))
     add_child(train)
+    details=Node3D.new()
+    details.set_script(preload("res://geographic_details.gd"))
+    add_child(details)
     camera=Camera3D.new()
     add_child(camera)
     camera.current=true
@@ -199,15 +203,11 @@ func _go(point: Array):
             var distance:=closest.distance_squared_to(car.position)
             if distance<best:best=distance;nearest=closest
     car.position=nearest
+    details.refresh(loaded.values(),car.position,true)
     camera.position=car.position+Vector3(0,6,12)
 func _vehicle():
     for node in car.get_children():car.remove_child(node);node.queue_free()
-    if kind==0:
-        var visual: Node3D=preload("res://assets/car/car-concept.glb").instantiate()
-        visual.scale=Vector3(0.72,0.85,0.85)
-        visual.position.y=0.135
-        car.add_child(visual)
-    else:fleet.build(car,kind)
+    fleet.build(car,kind)
     if is_instance_valid(horn):horn.pitch_scale=[1.0,1.18,1.1,0.7,0.9,0.65][kind]
 func _stream():
     var center:=Vector2i(floori(car.position.x/2000),floori(car.position.z/2000))
@@ -224,6 +224,7 @@ func _stream():
             var key:=Vector2i(x,z)
             if not loaded.has(key):_load_tile(key)
     train.set_tracks(loaded.values())
+    details.refresh(loaded.values(),car.position,true)
 func _load_tile(key: Vector2i):
     var path:=DATA+"%d_%d.json"%[key.x,key.y]
     if not FileAccess.file_exists(path):return
@@ -251,6 +252,16 @@ func _load_tile(key: Vector2i):
         if segment[2] in ["footway","path","steps","pedestrian","cycleway"]: base_color=Color("938d78")
         GeoVisuals.strip(surface,local_a,local_b,half,base_color)
         made_surface=true
+        # Generic urban verge detail; it is decorative, not surveyed kerb data.
+        if segment[2] in ["residential","tertiary"] and a.distance_to(b)>12 and str(segment[4])=="no":
+            var along: Vector3=(local_b-local_a).normalized()
+            var start: Vector3=local_a+along*3
+            var end: Vector3=local_b-along*3
+            for sign in [-1,1]:
+                var curb: Vector3=side*(half+0.12)*sign
+                GeoVisuals.strip(surface,start+curb+Vector3.UP*0.12,end+curb+Vector3.UP*0.12,0.12,Color(0.7,0.7,0.65,0.5))
+                var path_offset: Vector3=side*(half+0.8)*sign
+                GeoVisuals.strip(surface,start+path_offset+Vector3.UP*0.08,end+path_offset+Vector3.UP*0.08,0.55,Color(0.65,0.62,0.55,0.5))
         if railway:
             for offset in [-0.75,0.75]:
                 GeoVisuals.strip(surface,local_a+side*offset+Vector3.UP*0.025,local_b+side*offset+Vector3.UP*0.025,0.055,Color("b8c1bd"))
@@ -272,8 +283,7 @@ func _load_tile(key: Vector2i):
         var mesh:=MeshInstance3D.new()
         mesh.name="RoadsAndRail"
         mesh.mesh=surface.commit()
-        mesh.material_override=mat(Color.WHITE)
-        mesh.material_override.vertex_color_use_as_albedo=true
+        mesh.material_override=preload("res://surface_materials.gd").road()
         node.add_child(mesh)
     for i in range(data.buildings.size()):
         var points: Array=data.buildings[i][1]
@@ -298,9 +308,10 @@ func _load_tile(key: Vector2i):
         var facade:=ShaderMaterial.new()
         facade.shader=preload("res://geographic_buildings.gdshader")
         facade.set_shader_parameter("plaster",preload("res://assets/facade/textures/modular_urban_apartments_facade_plaster_diff_1k.jpg"))
+        facade.set_shader_parameter("plaster_normal",preload("res://assets/facade/textures/modular_urban_apartments_facade_plaster_nor_gl_1k.jpg"))
         buildings.material_override=facade
         node.add_child(buildings)
-    loaded[key]={"node":node,"roads":roads,"rail":data.rail,"boxes":boxes,"grid":grid}
+    loaded[key]={"node":node,"roads":roads,"rail":data.rail,"buildings":data.buildings,"boxes":boxes,"grid":grid}
 func _blocked(next: Vector3) -> bool:
     var cell:=Vector2i(floori(next.x/32),floori(next.z/32))
     for tile in loaded.values():
@@ -309,6 +320,7 @@ func _blocked(next: Vector3) -> bool:
     return false
 func _physics_process(delta):
     if manifest.is_empty() or paused:return
+    var vehicle_before:=car.position
     train.tick(delta,car.position)
     var keys:=Input.get_vector("ui_left","ui_right","ui_up","ui_down")
     var throttle:=pedal or keys.y<0
@@ -321,9 +333,16 @@ func _physics_process(delta):
     if _blocked(next) or train.blocks(next):speed=0
     else:car.position=next
     _stream()
+    var travelled:=vehicle_before.distance_to(car.position)*signf(speed)
+    fleet.animate(car,travelled,steering if steering!=0 else keys.x)
+    var lamps: Dictionary=car.get_meta("lamps",{})
+    if lamps.has("Brakelight"): lamps.Brakelight.emission_energy_multiplier=4.0 if stopping else 0.2
+    details.refresh(loaded.values(),car.position)
     engine_audio.pitch_scale=clampf(0.85+absf(speed)/22,0.85,2.0)
     if horn_down and not horn.playing:horn.play()
-    camera.position=car.position+Vector3(sin(yaw)*12,6,cos(yaw)*12)
+    var camera_heading:=car.rotation.y+PI+yaw
+    var camera_distance: float=7.5+maxf(0,fleet.LENGTHS[kind]-4.2)*0.5
+    camera.position=car.position+Vector3(sin(camera_heading)*camera_distance,2.8,cos(camera_heading)*camera_distance)
     camera.look_at(car.position+Vector3(0,1,0),Vector3.UP)
     info.text="KERALA GEOGRAPHIC DRIVE   |   %s   |   %d km/h\n%.5f N  %.5f E   |   OSM contributors / ODbL 1.0\nMapped footprints and roads; flat terrain and illustrative details."%[fleet.NAMES[kind],int(absf(speed)*3.6),10-car.position.z/111320,76+car.position.x/109628.3]
 func _input(event):

@@ -1,0 +1,69 @@
+{
+  "provider": "Poly Haven",
+  "license_url": "https://polyhaven.com/license",
+  "files": [
+    {
+      "file": "asphalt_02_color.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg",
+      "md5": "fa19772d4817754c3efab708c651f5a8",
+      "asset_page": "https://polyhaven.com/a/asphalt_02",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "asphalt_02_normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_nor_gl_1k.jpg",
+      "md5": "338da8de636ea36133170578cac82e8e",
+      "asset_page": "https://polyhaven.com/a/asphalt_02",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "asphalt_02_roughness.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_rough_1k.jpg",
+      "md5": "ec80a2929797c1b3ffc121c4f665585a",
+      "asset_page": "https://polyhaven.com/a/asphalt_02",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "clay_roof_tiles_color.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles/clay_roof_tiles_diff_1k.jpg",
+      "md5": "d862ac9932b09b0918b5971ddb77099c",
+      "asset_page": "https://polyhaven.com/a/clay_roof_tiles",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "clay_roof_tiles_normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles/clay_roof_tiles_nor_gl_1k.jpg",
+      "md5": "d861a708c94c824befc8aac668052776",
+      "asset_page": "https://polyhaven.com/a/clay_roof_tiles",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "clay_roof_tiles_roughness.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles/clay_roof_tiles_rough_1k.jpg",
+      "md5": "a5881067d2ba78e439f4782b1f6045bd",
+      "asset_page": "https://polyhaven.com/a/clay_roof_tiles",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "leafy_grass_color.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_diff_1k.jpg",
+      "md5": "0dbc071e91d6905edfcfbe8eb785a1ab",
+      "asset_page": "https://polyhaven.com/a/leafy_grass",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "leafy_grass_normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_nor_gl_1k.jpg",
+      "md5": "8279e096e204ea326d57a318869f99df",
+      "asset_page": "https://polyhaven.com/a/leafy_grass",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "leafy_grass_roughness.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_rough_1k.jpg",
+      "md5": "05f6bb1383e12b327727d313c5899cf2",
+      "asset_page": "https://polyhaven.com/a/leafy_grass",
+      "license": "CC0-1.0"
+    }
+  ]
+}

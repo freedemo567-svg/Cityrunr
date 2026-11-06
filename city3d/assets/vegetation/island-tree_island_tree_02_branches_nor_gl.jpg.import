@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cf4ub4ceq6gix"
+path="res://.godot/imported/island-tree_island_tree_02_branches_nor_gl.jpg-3230dcbb4f03ba02572e8ab5d7621a27.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "c329b95a116510f92767668e6d81c893"
+}
+
+[deps]
+
+source_file="res://assets/vegetation/island-tree_island_tree_02_branches_nor_gl.jpg"
+dest_files=["res://.godot/imported/island-tree_island_tree_02_branches_nor_gl.jpg-3230dcbb4f03ba02572e8ab5d7621a27.ctex"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1
