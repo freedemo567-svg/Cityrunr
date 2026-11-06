@@ -215,15 +215,22 @@ func run():
     scene.garage_panel.get_child(4).get_meta("touch_down").call()
     if scene.daylight!=1 or not scene.headlights or not scene.car.get_node("BeamLeft").visible:
         push_error("garage daylight/headlights failed"); quit(1); return
+    scene.character_button.get_meta("touch_down").call()
+    if scene.character_kind!=1 or not scene.human_visual.long_hair.visible or scene.character_button.text!="CHARACTER: FEMALE":
+        push_error("character selection failed"); quit(1); return
     scene._toggle_garage()
     if scene.paused:
         push_error("garage did not resume"); quit(1); return
     scene.paint_index=0
     scene.daylight=0
     scene.headlights=false
+    scene._set_character(0)
     scene._load_progress()
-    if scene.paint_index!=1 or scene.daylight!=1 or not scene.headlights:
+    if scene.paint_index!=1 or scene.daylight!=1 or not scene.headlights or scene.character_kind!=1 or not scene.human_visual.long_hair.visible:
         push_error("garage preferences not restored"); quit(1); return
+    scene._set_character(0)
+    if scene.human_visual.long_hair.visible:
+        push_error("male character selection failed"); quit(1); return
     scene._toggle_pause()
     scene._toggle_garage()
     scene._toggle_garage()
@@ -258,10 +265,25 @@ func run():
     scene._drive(0.2,0,0,false,true)
     if scene.car_speed>=0:
         push_error("reverse failed"); quit(1); return
-    scene.car_speed=5
-    scene._drive(0.1,1,0,false,false)
-    if scene.car.rotation.y==0:
-        push_error("steering failed"); quit(1); return
+    # The car's nose points along +Z, so its right side is local -X.
+    # Test actual wheel input and travel at two headings in both gears.
+    scene.in_car=true
+    for heading in [0.0, PI/2]:
+        for direction in [-1, 1]:
+            for initial_speed in [-5.0, 5.0]:
+                scene.car.position=Vector3.ZERO
+                scene.car.rotation.y=heading
+                scene.car_speed=initial_speed
+                wheel.position=Vector2(155+70*direction,575)
+                wheel.pressed=true
+                scene._input(wheel)
+                scene._drive(0.1,scene.steering,0,false,false)
+                var right:=Vector3(-cos(heading),0,sin(heading))
+                if scene.car.position.dot(right)*direction<=0 or (scene.car.rotation.y-heading)*direction*initial_speed>=0:
+                    push_error("wheel steering direction incorrect for heading %s, input %s, speed %s" % [heading,direction,initial_speed]); quit(1); return
+                wheel.pressed=false
+                scene._input(wheel)
+    scene.in_car=false
     scene.car.position=cover-Vector3(10,0,0)
     scene.car.rotation.y=PI/2
     scene.car_speed=22

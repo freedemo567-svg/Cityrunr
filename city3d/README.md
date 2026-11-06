@@ -36,7 +36,13 @@ Garage → REAL MAP DRIVE opens a separate geographic prototype based on OpenStr
 
 Install the separate Kerala data pack before opening this mode. The extracted JSON data is approximately 706 MiB. It supplies 3,721 searchable place/admin-seat labels; seats referenced by OSM relations are included even when their label node has no place tag.
 
-<!-- /coderabbit-ai-generated:v1 --> It contains projected roads, railway segments, building footprints/heights and mapped place labels clipped to the existing simplified district union. OSM coverage may be incomplete/outdated; private or restricted roads are not filtered for legal driving access. Geographic mode is an exploratory game visualization, not navigation guidance. The plane is flat, buildings are bounding boxes of footprints with default heights where missing, and roads have approximate widths. Coastline, terrain elevation, detailed bridge structures, signals and train schedules are not reconstructed in geographic mode. Its driving/collision is simplified; speed is capped by vehicle type. It does not represent a completed photorealistic Kerala world.
+<!-- /coderabbit-ai-generated:v1 --> <!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:2fce0428da158aca5b034b93e51b3391f37eba6aef3121a0ca0883e7b6782ded -->
+
+It contains projected roads, railway segments, building footprints/heights and mapped place labels clipped to the existing simplified district union. OSM coverage may be incomplete or outdated; private or restricted roads are not filtered for legal driving access. Geographic mode is an exploratory game visualization, not navigation guidance. Buildings follow mapped outlines, with fallback shapes for invalid outlines and default heights where missing. Facades and windows are illustrative. Roads have approximate widths, bridge tags add generic barriers, and railway segments have rails and sleepers. A generic train follows nearby connected mapped track; it has no real timetable and its rigid coaches do not model curves. The plane remains flat: coastlines, terrain elevation, detailed bridge structures and signals are not reconstructed. Collision uses conservative building bounds and simplified train geometry; speed is capped by vehicle type. The world is not a complete or photorealistic reproduction of Kerala.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 ### Geographic data licence and reproduction
 
@@ -54,7 +60,13 @@ python city3d/tools/import_kerala.py southern-zone.osm.pbf city3d/assets/kerala/
 
 The importer also runs `tools/place_labels.py` to resolve OSM administrative-seat relation members. Use the exact source checksum in the manifest for reproducibility; the `latest` download URL changes.
 
-<!-- /coderabbit-ai-generated:v1 --> Distribution retains source attribution and the ODbL licence. Rendering currently uses mapped building bounds rather than accurate meshes. Realistic vehicle art, audio for each model, surveyed terrain/building details, mobile optimization and physical-device verification remain outstanding.
+<!-- /coderabbit-ai-generated:v1 --> <!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:b25c4abc0e4386da56960bfac7040051be790db8b19b7711f253508820d5b605 -->
+
+Distribution retains source attribution and the ODbL licence. Facade details and ground cover are illustrative; surveyed terrain and building details, mobile optimization and physical-device verification remain outstanding.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 ## Version 0.9: people, controls and infrastructure
 
@@ -90,7 +102,15 @@ Approach the car and press ENTER / EXIT. Driving controls have icons and English
 
 GARAGE pauses the world. PAINT cycles five colors; TIME OF DAY cycles day, sunset and evening; HEADLIGHTS switches two projected beams and headlamp emission. Brake lights brighten while the brake/handbrake is pressed, and reverse lamps light while moving backwards. Changes save immediately. BACK TO DRIVE restores the prior pause state. Car sound is synthesized and changes pitch with speed; pause/exit stops it. Driving uses arcade physics, not a full vehicle simulation.
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:19107cd294739781b815af5d405e42913da37e176caa2b325e2f18ac5c03d855 -->
+
 ## Visuals
+
+GARAGE → CHARACTER switches between male and female presentations and saves the selection. Both use the existing animated body and scanned head; the female presentation adds a different outfit and hairstyle rather than a separate scanned model. Character selection applies to the town scene, where on-foot play is available. Geographic mode remains driving-only.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 The player uses a higher detail version of the existing concept car; traffic uses a simplified mesh with 90 meter visibility. Metallic paint removes the strong flake normal, and tinted reflective glass replaces unsupported glTF transmission in the compatibility renderer. The player mesh has about 213,000 triangles; traffic meshes have about 44,000 each. This is a generic concept model, not a licensed production vehicle. Four building types use shared textured plaster, scanned windows and doors, tiled sloping roofs, verandas, shop shutters, balconies, parapets and roof water tanks. Buildings use varied dimensions and colors. Geometry is generated at runtime; these are original Kerala-inspired arrangements, not scans of actual Kerala buildings. Far building visuals are culled at 160 meters. Mobile frame rate remains unverified.
 
