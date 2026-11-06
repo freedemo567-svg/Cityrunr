@@ -1,0 +1,9 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {"label":"City: Check Setup","type":"process","command":"node","args":["${workspaceFolder}/tools/project.mjs","check"],"problemMatcher":[]},
+    {"label":"City: Run Game","type":"process","command":"node","args":["${workspaceFolder}/tools/project.mjs","run"],"problemMatcher":[]},
+    {"label":"City: Gameplay Test","type":"process","command":"node","args":["${workspaceFolder}/tools/project.mjs","test"],"problemMatcher":[]},
+    {"label":"City: Build APK","type":"process","command":"node","args":["${workspaceFolder}/tools/project.mjs","build"],"group":{"kind":"build","isDefault":true},"problemMatcher":[]}
+  ]
+}
