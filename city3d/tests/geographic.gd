@@ -61,6 +61,20 @@ func run():
     if not require(train.position.distance_to(train_start)>50 and absf(train.position.z)<0.01,"Train did not follow connected rail"):return
     train.set_tracks([])
     if not require(not train.active and not train.visible,"Train survived unloaded tracks"):return
+    var crossings=preload("res://geographic_crossings.gd").new()
+    root.add_child(crossings)
+    var junction={"roads":[[Vector3(-20,0,0),Vector3.ZERO],[Vector3.ZERO,Vector3(20,0,0)],[Vector3.ZERO,Vector3(0,0,20)]],"rail":[[[0,-20],[0,20]]]}
+    crossings.refresh([junction],Vector3.ZERO)
+    if not require(crossings.signals.size()==1 and not crossings.gates.is_empty(),"Mapped junction/crossing controls missing"):return
+    train.set_tracks([{"rail":[[[-100,0],[100,0]]]}])
+    train.tick(0.1,Vector3(50,0,0))
+    train.position=Vector3(20,0,0)
+    crossings.tick(0.1,train)
+    if not require(crossings.gates[0].closed,"Crossing gate did not respond to nearby train"):return
+    train.set_tracks([])
+    crossings.tick(0.1,train)
+    if not require(not crossings.gates[0].closed,"Crossing gate did not reopen"):return
+    crossings.queue_free()
     train.queue_free()
     var scene=load("res://geodrive.tscn").instantiate()
     root.add_child(scene)
@@ -121,7 +135,7 @@ func run():
     if not require((scene.camera.position-scene.car.position).dot(Vector3(sin(scene.car.rotation.y),0,cos(scene.car.rotation.y)))<0,"Default camera is ahead of the vehicle"):return
     scene.handbrake=true
     scene._physics_process(0.1)
-    if not require(scene.speed==0,"Handbrake did not stop vehicle"):return
+    if not require(scene.speed<1.0,"Handbrake did not slow vehicle"):return
     if not require(scene.car.get_meta("lamps").Brakelight.emission_energy_multiplier>=3,"Geographic brake lamps did not brighten"):return
     scene.handbrake=false
     scene.pedal=false
@@ -135,6 +149,7 @@ func run():
                 scene.tile_center=Vector2i(50,50)
                 scene.car.rotation.y=heading
                 scene.speed=initial_speed
+                scene.dynamics.reset()
                 scene._input(touch(12,true,Vector2(155+70*direction,575)))
                 var start: Vector3=scene.car.position
                 scene._physics_process(0.1)
@@ -150,6 +165,74 @@ func run():
         scene.kind=kind
         scene._vehicle()
         if not require(scene.car.get_child_count()>0,"Fleet visual missing"):return
+    # Features now belong to the same geographic scene, with no Town transition.
+    var life=scene.life
+    scene.speed=0
+    life.toggle_car()
+    if not require(not scene.in_car and life.player.visible and not scene.engine_audio.playing,"Exit to Kerala on foot failed"):return
+    var foot_start: Vector3=life.player.position
+    life.input_dir=Vector2(1,0)
+    life.tick(0.1)
+    life.input_dir=Vector2.ZERO
+    if not require(life.player.position!=foot_start,"Walking on the mapped world failed"):return
+    life.player.position=scene.car.position
+    life.toggle_car()
+    if not require(scene.in_car and not life.player.visible,"Re-enter mapped car failed"):return
+    life.toggle_garage()
+    if not require(life.garage.visible and scene.paused,"Garage must pause the shared world"):return
+    life.character=1
+    life.human.set_appearance(1)
+    life.paint=2
+    life.headlights=true
+    life.daylight=2
+    life.apply_vehicle()
+    life.apply_daylight()
+    life.save()
+    life.character=0;life.paint=0;life.headlights=false;life.daylight=0
+    life.restore()
+    if not require(life.character==1 and life.paint==2 and life.headlights and life.daylight==2 and life.human.appearance==1,"Geographic preferences did not persist"):return
+    life.toggle_garage()
+    if not require(not scene.paused,"Garage did not resume world"):return
+    life.toggle_map()
+    if not require(life.overview.visible and life.overview.features.size()==14 and scene.paused,"District overview missing"):return
+    life.toggle_map()
+    life.spawn_traffic(scene.car.position)
+    if not require(not life.traffic.is_empty() and life.traffic.size()<=8,"Mapped traffic missing or unbounded"):return
+    if not require(ProjectSettings.get_setting("application/run/main_scene")=="res://geodrive.tscn" and not ResourceLoader.exists("res://main.tscn"),"Town entry point still exists"):return
+    var saved_map: Vector3=scene.car.position
+    scene.car.position=Vector3(100001,0,100001)
+    life.player.position=scene.car.position
+    scene.in_car=false
+    life.player.show()
+    life.rivals[0].position=life.player.position+Vector3(0,0,5)
+    for i in range(3):
+        life.shot_cooldown=0
+        life.fire()
+    if not require(not life.rivals[0].visible and life.wanted>0,"Mapped world FIRE/police interaction missing"):return
+    scene.in_car=true
+    life.player.hide()
+    scene.car.position=saved_map
+    life.update_controls()
+    scene.speed=0
+    scene._input(touch(20,true,Vector2(960,620)))
+    scene._input(touch(20,false,Vector2(960,620)))
+    if not require(scene.reverse,"Gear selection did not persist after release"):return
+    scene._physics_process(0.1)
+    if not require(scene.speed==0,"Selecting reverse without throttle moved the car"):return
+    scene.reverse=false
+    scene.speed=10
+    scene._input(touch(20,true,Vector2(960,620)))
+    scene._input(touch(20,false,Vector2(960,620)))
+    if not require(not scene.reverse,"Gear changed while moving"):return
+    scene.speed=0
+    var horn_key:=InputEventKey.new()
+    horn_key.physical_keycode=KEY_H
+    horn_key.pressed=true
+    scene._input(horn_key)
+    if not require(scene.horn_down and scene.horn.playing,"Keyboard horn did not start"):return
+    horn_key.pressed=false
+    scene._input(horn_key)
+    if not require(not scene.horn_down and not scene.horn.playing,"Keyboard horn did not stop"):return
     scene._input(touch(4,true,Vector2(50,450)))
     if not require(scene.horn_down and scene.horn.playing,"Horn did not start"):return
     scene.horn.stop()

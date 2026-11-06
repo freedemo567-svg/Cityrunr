@@ -23,7 +23,7 @@ func _draw():
     draw_rect(Rect2(Vector2.ZERO,size),Color("10252c"))
     var font=ThemeDB.fallback_font
     draw_string(font,Vector2(24,34),"KERALA | DISTRICT OVERVIEW",HORIZONTAL_ALIGNMENT_LEFT,-1,25,Color.WHITE)
-    draw_string(font,Vector2(24,59),"Select a district. This map is not yet a playable Kerala world.",HORIZONTAL_ALIGNMENT_LEFT,-1,16,Color("d5e6e4"))
+    draw_string(font,Vector2(24,59),"District overview. Search a place in Kerala to explore its roads.",HORIZONTAL_ALIGNMENT_LEFT,-1,16,Color("d5e6e4"))
     for i in range(features.size()):
         var poly:=PackedVector2Array()
         for coordinate in features[i].geometry.coordinates[0]: poly.append(_point(coordinate))

@@ -1,0 +1,1707 @@
+{
+  "version": 1,
+  "description": "Fictional game-created examples; not mapped building identities or real locations.",
+  "buildings": [
+    {
+      "id": -1,
+      "name": "Safehouse",
+      "category": "residential",
+      "city": "Kochi",
+      "center": [
+        28307.8,
+        5774.2
+      ],
+      "point": [
+        28298.3,
+        5748.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 8
+    },
+    {
+      "id": -2,
+      "name": "Apartment",
+      "category": "residential",
+      "city": "Thrissur",
+      "center": [
+        19846.9,
+        -59708.6
+      ],
+      "point": [
+        19855.4,
+        -59682.8
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 18
+    },
+    {
+      "id": -3,
+      "name": "Mansion",
+      "category": "residential",
+      "city": "Kottayam",
+      "center": [
+        52193.7,
+        47412.3
+      ],
+      "point": [
+        52193.5,
+        47385.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -4,
+      "name": "Penthouse",
+      "category": "residential",
+      "city": "Kollam",
+      "center": [
+        66590.8,
+        119169.1
+      ],
+      "point": [
+        66616.8,
+        119177.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 24
+    },
+    {
+      "id": -5,
+      "name": "Villa",
+      "category": "residential",
+      "city": "Thiruvananthapuram",
+      "center": [
+        98327.5,
+        164952.4
+      ],
+      "point": [
+        98340.8,
+        164976.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 8
+    },
+    {
+      "id": -6,
+      "name": "Cottage",
+      "category": "residential",
+      "city": "Kozhikode",
+      "center": [
+        -22720.0,
+        -141640.6
+      ],
+      "point": [
+        -22745.0,
+        -141651.5
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 8
+    },
+    {
+      "id": -7,
+      "name": "Motel",
+      "category": "residential",
+      "city": "Kannur",
+      "center": [
+        -69884.4,
+        -211963.8
+      ],
+      "point": [
+        -69886.5,
+        -211936.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 8
+    },
+    {
+      "id": -8,
+      "name": "Hotel",
+      "category": "residential",
+      "city": "Kochi",
+      "center": [
+        28288.9,
+        5723.2
+      ],
+      "point": [
+        28298.3,
+        5748.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 25
+    },
+    {
+      "id": -9,
+      "name": "Skyscraper",
+      "category": "office",
+      "city": "Thrissur",
+      "center": [
+        25604.3,
+        -61190.8
+      ],
+      "point": [
+        25577.0,
+        -61190.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 70
+    },
+    {
+      "id": -10,
+      "name": "Office",
+      "category": "office",
+      "city": "Kottayam",
+      "center": [
+        56791.9,
+        48912.4
+      ],
+      "point": [
+        56818.9,
+        48915.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 18
+    },
+    {
+      "id": -11,
+      "name": "Corporate HQ",
+      "category": "office",
+      "city": "Kollam",
+      "center": [
+        63464.8,
+        124558.1
+      ],
+      "point": [
+        63472.2,
+        124531.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 30
+    },
+    {
+      "id": -12,
+      "name": "Bank",
+      "category": "office",
+      "city": "Thiruvananthapuram",
+      "center": [
+        98381.3,
+        164922.4
+      ],
+      "point": [
+        98394.6,
+        164946.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 13
+    },
+    {
+      "id": -13,
+      "name": "ATM Kiosk",
+      "category": "office",
+      "city": "Kozhikode",
+      "center": [
+        -21983.2,
+        -138447.5
+      ],
+      "point": [
+        -21986.6,
+        -138468.7
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 13
+    },
+    {
+      "id": -14,
+      "name": "Police Station",
+      "category": "civic",
+      "city": "Kannur",
+      "center": [
+        -68808.7,
+        -212278.8
+      ],
+      "point": [
+        -68807.4,
+        -212251.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -15,
+      "name": "Fire Station",
+      "category": "civic",
+      "city": "Kochi",
+      "center": [
+        29252.7,
+        6510.9
+      ],
+      "point": [
+        29279.9,
+        6510.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -16,
+      "name": "Hospital",
+      "category": "civic",
+      "city": "Thrissur",
+      "center": [
+        26908.8,
+        -57695.4
+      ],
+      "point": [
+        26945.1,
+        -57697.9
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 18
+    },
+    {
+      "id": -17,
+      "name": "Clinic",
+      "category": "civic",
+      "city": "Kottayam",
+      "center": [
+        56845.9,
+        48918.9
+      ],
+      "point": [
+        56818.9,
+        48915.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -18,
+      "name": "City Hall",
+      "category": "civic",
+      "city": "Kollam",
+      "center": [
+        62664.4,
+        119915.9
+      ],
+      "point": [
+        62663.4,
+        119943.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -19,
+      "name": "Courthouse",
+      "category": "civic",
+      "city": "Thiruvananthapuram",
+      "center": [
+        106720.9,
+        173170.5
+      ],
+      "point": [
+        106746.9,
+        173162.4
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -20,
+      "name": "Prison",
+      "category": "civic",
+      "city": "Kozhikode",
+      "center": [
+        -22778.4,
+        -141665.9
+      ],
+      "point": [
+        -22745.0,
+        -141651.5
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 10
+    },
+    {
+      "id": -21,
+      "name": "Military Base",
+      "category": "civic",
+      "city": "Kannur",
+      "center": [
+        -65017.2,
+        -212188.6
+      ],
+      "point": [
+        -65010.0,
+        -212224.3
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 10
+    },
+    {
+      "id": -22,
+      "name": "Airport Terminal",
+      "category": "transport",
+      "city": "Kochi",
+      "center": [
+        29316.4,
+        6510.1
+      ],
+      "point": [
+        29279.9,
+        6510.6
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -23,
+      "name": "Hangar",
+      "category": "transport",
+      "city": "Thrissur",
+      "center": [
+        21317.8,
+        -62050.8
+      ],
+      "point": [
+        21292.1,
+        -62041.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -24,
+      "name": "Helipad",
+      "category": "transport",
+      "city": "Kottayam",
+      "center": [
+        56514.0,
+        46514.1
+      ],
+      "point": [
+        56539.8,
+        46505.3
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -25,
+      "name": "Train Station",
+      "category": "transport",
+      "city": "Kollam",
+      "center": [
+        68566.7,
+        118066.6
+      ],
+      "point": [
+        68567.2,
+        118039.4
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -26,
+      "name": "Subway Station",
+      "category": "transport",
+      "city": "Thiruvananthapuram",
+      "center": [
+        104069.0,
+        168117.3
+      ],
+      "point": [
+        104041.9,
+        168119.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -27,
+      "name": "Bus Depot",
+      "category": "transport",
+      "city": "Kozhikode",
+      "center": [
+        -22842.4,
+        -134427.2
+      ],
+      "point": [
+        -22817.4,
+        -134438.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -28,
+      "name": "Port Terminal",
+      "category": "transport",
+      "city": "Kannur",
+      "center": [
+        -64400.1,
+        -212539.1
+      ],
+      "point": [
+        -64365.1,
+        -212549.2
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -29,
+      "name": "Cargo Depot",
+      "category": "transport",
+      "city": "Kochi",
+      "center": [
+        30922.3,
+        -1967.6
+      ],
+      "point": [
+        30955.2,
+        -1952.0
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -30,
+      "name": "Gas Station",
+      "category": "vehicle",
+      "city": "Thrissur",
+      "center": [
+        27277.7,
+        -60568.9
+      ],
+      "point": [
+        27304.0,
+        -60576.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -31,
+      "name": "Car Dealership",
+      "category": "vehicle",
+      "city": "Kottayam",
+      "center": [
+        56565.6,
+        46496.6
+      ],
+      "point": [
+        56539.8,
+        46505.3
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -32,
+      "name": "Mechanic Shop",
+      "category": "vehicle",
+      "city": "Kollam",
+      "center": [
+        68567.8,
+        118012.2
+      ],
+      "point": [
+        68567.2,
+        118039.4
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -33,
+      "name": "Car Wash",
+      "category": "vehicle",
+      "city": "Thiruvananthapuram",
+      "center": [
+        100592.2,
+        165851.3
+      ],
+      "point": [
+        100565.5,
+        165856.3
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -34,
+      "name": "Tuning Garage",
+      "category": "vehicle",
+      "city": "Kozhikode",
+      "center": [
+        -22466.3,
+        -142148.6
+      ],
+      "point": [
+        -22439.2,
+        -142145.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -35,
+      "name": "Parking Garage",
+      "category": "vehicle",
+      "city": "Kannur",
+      "center": [
+        -69968.8,
+        -214014.3
+      ],
+      "point": [
+        -69995.7,
+        -214010.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -36,
+      "name": "Supermarket",
+      "category": "retail",
+      "city": "Kochi",
+      "center": [
+        26634.5,
+        -854.5
+      ],
+      "point": [
+        26610.4,
+        -867.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -37,
+      "name": "Convenience Store",
+      "category": "retail",
+      "city": "Thrissur",
+      "center": [
+        27328.3,
+        -60590.3
+      ],
+      "point": [
+        27302.1,
+        -60583.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -38,
+      "name": "Clothing Store",
+      "category": "retail",
+      "city": "Kottayam",
+      "center": [
+        59597.7,
+        49844.5
+      ],
+      "point": [
+        59624.8,
+        49842.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -39,
+      "name": "Ammu-Nation",
+      "category": "retail",
+      "city": "Kollam",
+      "center": [
+        65306.3,
+        118671.0
+      ],
+      "point": [
+        65295.6,
+        118696.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -40,
+      "name": "Barber Shop",
+      "category": "retail",
+      "city": "Thiruvananthapuram",
+      "center": [
+        105401.3,
+        169763.3
+      ],
+      "point": [
+        105428.4,
+        169766.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -41,
+      "name": "Tattoo Parlor",
+      "category": "retail",
+      "city": "Kozhikode",
+      "center": [
+        -22412.1,
+        -142143.1
+      ],
+      "point": [
+        -22439.2,
+        -142145.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -42,
+      "name": "Restaurant",
+      "category": "retail",
+      "city": "Kannur",
+      "center": [
+        -68977.4,
+        -207909.9
+      ],
+      "point": [
+        -69004.6,
+        -207909.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -43,
+      "name": "Fast Food Joint",
+      "category": "retail",
+      "city": "Kochi",
+      "center": [
+        31955.7,
+        -1193.3
+      ],
+      "point": [
+        31928.9,
+        -1188.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -44,
+      "name": "Cafe",
+      "category": "retail",
+      "city": "Thrissur",
+      "center": [
+        18469.9,
+        -54881.6
+      ],
+      "point": [
+        18497.1,
+        -54881.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -45,
+      "name": "Bar",
+      "category": "retail",
+      "city": "Kottayam",
+      "center": [
+        56532.5,
+        46621.9
+      ],
+      "point": [
+        56505.8,
+        46627.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -46,
+      "name": "Nightclub",
+      "category": "retail",
+      "city": "Kollam",
+      "center": [
+        64123.7,
+        121293.0
+      ],
+      "point": [
+        64112.9,
+        121318.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -47,
+      "name": "Strip Club",
+      "category": "retail",
+      "city": "Thiruvananthapuram",
+      "center": [
+        107854.5,
+        172976.8
+      ],
+      "point": [
+        107844.6,
+        173002.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -48,
+      "name": "Casino",
+      "category": "retail",
+      "city": "Kozhikode",
+      "center": [
+        -20216.1,
+        -137141.0
+      ],
+      "point": [
+        -20202.5,
+        -137164.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -49,
+      "name": "Movie Theater",
+      "category": "retail",
+      "city": "Kannur",
+      "center": [
+        -70374.2,
+        -213891.7
+      ],
+      "point": [
+        -70401.1,
+        -213887.3
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -50,
+      "name": "Bowling Alley",
+      "category": "retail",
+      "city": "Kochi",
+      "center": [
+        27416.7,
+        7544.1
+      ],
+      "point": [
+        27391.8,
+        7554.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -51,
+      "name": "Arcade",
+      "category": "retail",
+      "city": "Thrissur",
+      "center": [
+        20122.2,
+        -57076.7
+      ],
+      "point": [
+        20125.4,
+        -57049.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -52,
+      "name": "Gym",
+      "category": "retail",
+      "city": "Kottayam",
+      "center": [
+        56478.0,
+        46626.9
+      ],
+      "point": [
+        56504.7,
+        46621.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -53,
+      "name": "Stadium",
+      "category": "leisure",
+      "city": "Kollam",
+      "center": [
+        64658.1,
+        122537.2
+      ],
+      "point": [
+        64676.9,
+        122506.0
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 10
+    },
+    {
+      "id": -54,
+      "name": "Racetrack",
+      "category": "leisure",
+      "city": "Thiruvananthapuram",
+      "center": [
+        102842.1,
+        166079.7
+      ],
+      "point": [
+        102862.3,
+        166110.0
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 10
+    },
+    {
+      "id": -55,
+      "name": "Golf Club",
+      "category": "leisure",
+      "city": "Kozhikode",
+      "center": [
+        -20189.0,
+        -137188.3
+      ],
+      "point": [
+        -20202.5,
+        -137164.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -56,
+      "name": "Yacht Club",
+      "category": "leisure",
+      "city": "Kannur",
+      "center": [
+        -67212.3,
+        -208071.7
+      ],
+      "point": [
+        -67210.1,
+        -208044.6
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -57,
+      "name": "Marina",
+      "category": "leisure",
+      "city": "Kochi",
+      "center": [
+        31793.9,
+        -273.4
+      ],
+      "point": [
+        31768.5,
+        -263.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -58,
+      "name": "Warehouse",
+      "category": "industrial",
+      "city": "Thrissur",
+      "center": [
+        20128.7,
+        -57022.7
+      ],
+      "point": [
+        20125.4,
+        -57049.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -59,
+      "name": "Factory",
+      "category": "industrial",
+      "city": "Kottayam",
+      "center": [
+        55121.5,
+        43234.3
+      ],
+      "point": [
+        55109.6,
+        43209.8
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -60,
+      "name": "Power Plant",
+      "category": "industrial",
+      "city": "Kollam",
+      "center": [
+        64022.5,
+        121742.8
+      ],
+      "point": [
+        64024.5,
+        121706.4
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -61,
+      "name": "Oil Refinery",
+      "category": "industrial",
+      "city": "Thiruvananthapuram",
+      "center": [
+        106286.1,
+        172270.7
+      ],
+      "point": [
+        106300.4,
+        172237.2
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -62,
+      "name": "Construction Site",
+      "category": "industrial",
+      "city": "Kozhikode",
+      "center": [
+        -24804.7,
+        -141744.7
+      ],
+      "point": [
+        -24791.7,
+        -141720.8
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -63,
+      "name": "Salvage Yard",
+      "category": "industrial",
+      "city": "Kannur",
+      "center": [
+        -64948.7,
+        -205603.5
+      ],
+      "point": [
+        -64974.2,
+        -205594.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -64,
+      "name": "Junk Yard",
+      "category": "industrial",
+      "city": "Kochi",
+      "center": [
+        30522.0,
+        -1123.9
+      ],
+      "point": [
+        30529.5,
+        -1097.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -65,
+      "name": "Cargo Warehouse",
+      "category": "industrial",
+      "city": "Thrissur",
+      "center": [
+        24845.3,
+        -57384.9
+      ],
+      "point": [
+        24869.8,
+        -57372.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -66,
+      "name": "Substation",
+      "category": "industrial",
+      "city": "Kottayam",
+      "center": [
+        52282.5,
+        43443.9
+      ],
+      "point": [
+        52284.2,
+        43471.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 9
+    },
+    {
+      "id": -67,
+      "name": "Sewage Treatment Plant",
+      "category": "industrial",
+      "city": "Kollam",
+      "center": [
+        60411.0,
+        122583.5
+      ],
+      "point": [
+        60447.2,
+        122580.1
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -68,
+      "name": "Landfill Facility",
+      "category": "industrial",
+      "city": "Thiruvananthapuram",
+      "center": [
+        106314.8,
+        172203.8
+      ],
+      "point": [
+        106300.4,
+        172237.2
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 9
+    },
+    {
+      "id": -69,
+      "name": "Farm House",
+      "category": "rural",
+      "city": "Kozhikode",
+      "center": [
+        -22344.5,
+        -138655.8
+      ],
+      "point": [
+        -22336.0,
+        -138681.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -70,
+      "name": "Barn",
+      "category": "rural",
+      "city": "Kannur",
+      "center": [
+        -70448.5,
+        -212310.6
+      ],
+      "point": [
+        -70436.3,
+        -212334.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -71,
+      "name": "Silo",
+      "category": "rural",
+      "city": "Kochi",
+      "center": [
+        31184.2,
+        -918.7
+      ],
+      "point": [
+        31177.1,
+        -939.0
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 18
+    },
+    {
+      "id": -72,
+      "name": "Greenhouse",
+      "category": "rural",
+      "city": "Thrissur",
+      "center": [
+        24894.2,
+        -57361.0
+      ],
+      "point": [
+        24869.8,
+        -57372.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -73,
+      "name": "Windmill",
+      "category": "rural",
+      "city": "Kottayam",
+      "center": [
+        59646.2,
+        49840.3
+      ],
+      "point": [
+        59624.8,
+        49842.1
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 7
+    },
+    {
+      "id": -74,
+      "name": "Fire Watchtower",
+      "category": "rural",
+      "city": "Kollam",
+      "center": [
+        61010.3,
+        120662.4
+      ],
+      "point": [
+        61016.5,
+        120641.8
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 7
+    },
+    {
+      "id": -75,
+      "name": "Ranger Station",
+      "category": "rural",
+      "city": "Thiruvananthapuram",
+      "center": [
+        99928.0,
+        164525.8
+      ],
+      "point": [
+        99926.2,
+        164498.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -76,
+      "name": "Abandoned Mine",
+      "category": "rural",
+      "city": "Kozhikode",
+      "center": [
+        -24767.8,
+        -139214.6
+      ],
+      "point": [
+        -24740.6,
+        -139213.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -77,
+      "name": "Bunkhouse",
+      "category": "rural",
+      "city": "Kannur",
+      "center": [
+        -65439.3,
+        -204805.8
+      ],
+      "point": [
+        -65466.4,
+        -204806.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 7
+    },
+    {
+      "id": -78,
+      "name": "Lighthouse",
+      "category": "landmark",
+      "city": "Kochi",
+      "center": [
+        26413.1,
+        5337.1
+      ],
+      "point": [
+        26393.6,
+        5345.9
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 20
+    },
+    {
+      "id": -79,
+      "name": "Observatory",
+      "category": "landmark",
+      "city": "Thrissur",
+      "center": [
+        19652.9,
+        -55770.9
+      ],
+      "point": [
+        19656.9,
+        -55743.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 11
+    },
+    {
+      "id": -80,
+      "name": "Planetarium",
+      "category": "landmark",
+      "city": "Kottayam",
+      "center": [
+        52286.0,
+        43498.2
+      ],
+      "point": [
+        52284.2,
+        43471.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 11
+    },
+    {
+      "id": -81,
+      "name": "Museum",
+      "category": "landmark",
+      "city": "Kollam",
+      "center": [
+        64666.2,
+        124734.9
+      ],
+      "point": [
+        64691.1,
+        124723.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 11
+    },
+    {
+      "id": -82,
+      "name": "Art Gallery",
+      "category": "landmark",
+      "city": "Thiruvananthapuram",
+      "center": [
+        102646.3,
+        166802.1
+      ],
+      "point": [
+        102655.0,
+        166827.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 11
+    },
+    {
+      "id": -83,
+      "name": "Library",
+      "category": "landmark",
+      "city": "Kozhikode",
+      "center": [
+        -22110.6,
+        -138701.1
+      ],
+      "point": [
+        -22083.6,
+        -138704.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 11
+    },
+    {
+      "id": -84,
+      "name": "University Hall",
+      "category": "landmark",
+      "city": "Kannur",
+      "center": [
+        -65503.0,
+        -204802.4
+      ],
+      "point": [
+        -65466.6,
+        -204801.2
+      ],
+      "width": 36,
+      "depth": 30,
+      "height": 11
+    },
+    {
+      "id": -85,
+      "name": "School",
+      "category": "landmark",
+      "city": "Kochi",
+      "center": [
+        29983.1,
+        423.1
+      ],
+      "point": [
+        29981.4,
+        395.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 11
+    },
+    {
+      "id": -86,
+      "name": "Church",
+      "category": "worship",
+      "city": "Thrissur",
+      "center": [
+        19660.9,
+        -55717.0
+      ],
+      "point": [
+        19656.9,
+        -55743.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 12
+    },
+    {
+      "id": -87,
+      "name": "Cathedral",
+      "category": "worship",
+      "city": "Kottayam",
+      "center": [
+        54410.9,
+        41019.8
+      ],
+      "point": [
+        54438.2,
+        41020.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 15
+    },
+    {
+      "id": -88,
+      "name": "Temple",
+      "category": "worship",
+      "city": "Kollam",
+      "center": [
+        64130.3,
+        119627.9
+      ],
+      "point": [
+        64130.6,
+        119655.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 12
+    },
+    {
+      "id": -89,
+      "name": "Mosque",
+      "category": "worship",
+      "city": "Thiruvananthapuram",
+      "center": [
+        102663.7,
+        166853.7
+      ],
+      "point": [
+        102655.0,
+        166827.9
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 12
+    },
+    {
+      "id": -90,
+      "name": "Cemetery Chapel",
+      "category": "worship",
+      "city": "Kozhikode",
+      "center": [
+        -25472.8,
+        -143746.0
+      ],
+      "point": [
+        -25471.7,
+        -143773.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 12
+    },
+    {
+      "id": -91,
+      "name": "Morgue",
+      "category": "worship",
+      "city": "Kannur",
+      "center": [
+        -68078.4,
+        -211248.6
+      ],
+      "point": [
+        -68052.4,
+        -211256.7
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 12
+    },
+    {
+      "id": -92,
+      "name": "TV Station",
+      "category": "media",
+      "city": "Kochi",
+      "center": [
+        28603.8,
+        20.6
+      ],
+      "point": [
+        28628.5,
+        9.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -93,
+      "name": "Radio Station",
+      "category": "media",
+      "city": "Thrissur",
+      "center": [
+        23715.7,
+        -61899.6
+      ],
+      "point": [
+        23688.5,
+        -61899.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -94,
+      "name": "News Bureau",
+      "category": "media",
+      "city": "Kottayam",
+      "center": [
+        54465.4,
+        41020.6
+      ],
+      "point": [
+        54438.2,
+        41020.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 10
+    },
+    {
+      "id": -95,
+      "name": "Billboard Tower",
+      "category": "media",
+      "city": "Kollam",
+      "center": [
+        62670.9,
+        119964.9
+      ],
+      "point": [
+        62671.7,
+        119943.4
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 15
+    },
+    {
+      "id": -96,
+      "name": "Water Tower",
+      "category": "media",
+      "city": "Thiruvananthapuram",
+      "center": [
+        100546.5,
+        165871.5
+      ],
+      "point": [
+        100567.6,
+        165867.5
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 18
+    },
+    {
+      "id": -97,
+      "name": "Radio Mast",
+      "category": "media",
+      "city": "Kozhikode",
+      "center": [
+        -22205.7,
+        -140015.8
+      ],
+      "point": [
+        -22202.0,
+        -140037.0
+      ],
+      "width": 12,
+      "depth": 12,
+      "height": 20
+    },
+    {
+      "id": -98,
+      "name": "Smuggling Den",
+      "category": "secret",
+      "city": "Kannur",
+      "center": [
+        -68695.1,
+        -213697.6
+      ],
+      "point": [
+        -68668.5,
+        -213703.2
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 6
+    },
+    {
+      "id": -99,
+      "name": "Secret Laboratory",
+      "category": "secret",
+      "city": "Kochi",
+      "center": [
+        26246.1,
+        4423.9
+      ],
+      "point": [
+        26273.2,
+        4427.1
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 6
+    },
+    {
+      "id": -100,
+      "name": "Underground Bunker",
+      "category": "secret",
+      "city": "Thrissur",
+      "center": [
+        23661.2,
+        -61898.4
+      ],
+      "point": [
+        23688.5,
+        -61899.0
+      ],
+      "width": 22,
+      "depth": 18,
+      "height": 6
+    }
+  ],
+  "generated_by": "CodeRabbit"
+}

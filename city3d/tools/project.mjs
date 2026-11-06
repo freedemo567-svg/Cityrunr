@@ -35,11 +35,11 @@ try {
   if (action === 'check') {
     console.log('Godot and project found. Configure Android SDK, JDK 17 and export templates in Godot before Build APK.');
   } else {
-    execute(['--headless', '--path', root, '--editor', '--quit']);
+    execute(['--headless', '--path', root, '--editor', '--import']);
     if (action === 'run') execute(['--path', root], 24 * 60 * 60 * 1000);
     if (action === 'test') {
       const testData = mkdtempSync(resolve(tmpdir(), 'city-run-tests-'));
-      execute(['--path', root, '--script', 'res://tests/smoke.gd'], 600_000,
+      execute(['--path', root, '--script', 'res://tests/geographic.gd'], 600_000,
         { ...process.env, APPDATA: testData, XDG_DATA_HOME: testData });
     }
     if (action === 'build') {

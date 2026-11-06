@@ -35,9 +35,14 @@ func refresh(tiles: Array, focus: Vector3, force := false):
             for i in range(polygon.size()):
                 var closest:=Geometry2D.get_closest_point_to_segment(focus_2d,polygon[i],polygon[(i+1)%polygon.size()])
                 distance=minf(distance,focus_2d.distance_squared_to(closest))
-            if distance<RADIUS*RADIUS: nearby.append({"polygon":polygon,"center":center,"height":float(entry[2]),"distance":distance,"id":int(entry[0])})
+            if distance<RADIUS*RADIUS: nearby.append({"polygon":polygon,"center":center,"height":float(entry[2]),"distance":distance,"id":int(entry[0]),"example":entry[3] if entry.size()>3 and entry[3] is Dictionary else {}})
     budget=24*640
-    nearby.sort_custom(func(a,b): return a.distance<b.distance)
+    # Example locations take priority while close, so searches always show them.
+    nearby.sort_custom(func(a,b):
+        var a_example: bool=not a.example.is_empty() and a.distance<60*60
+        var b_example: bool=not b.example.is_empty() and b.distance<60*60
+        if a_example!=b_example:return a_example
+        return a.distance<b.distance)
     for i in range(mini(LIMIT,nearby.size())):
         _decorate(nearby[i])
         if i<12: _plant(nearby[i],tiles)
@@ -49,11 +54,14 @@ func _decorate(data: Dictionary):
     node.position=Vector3(data.center.x,0,data.center.y)
     add_child(node)
     roots.append(node)
-    _roof_detail(node,data)
+    if data.example.is_empty(): _roof_detail(node,data)
+    else: preload("res://example_buildings.gd").new().decorate(node,data.example)
     var local_polygon:=PackedVector2Array()
     for point in data.polygon: local_polygon.append(point-data.center)
     var facade=preload("res://building_facade.gd").new()
-    var used: int=facade.build(node,local_polygon,data.height,posmod(int(data.id),4),focus_position-node.position,mini(640,budget),node.get_node_or_null("TiledRoof")!=null)
+    var style: int=posmod(int(data.id),4)
+    if not data.example.is_empty():style=3 if data.example.category in ["retail","vehicle","transport","industrial"] else (0 if data.example.category=="residential" else 2)
+    var used: int=facade.build(node,local_polygon,data.height,style,focus_position-node.position,mini(640,budget),node.get_node_or_null("TiledRoof")!=null,not data.example.is_empty())
     budget-=used
     for visual in node.find_children("*","GeometryInstance3D",true,false):
         visual.visibility_range_end=RADIUS

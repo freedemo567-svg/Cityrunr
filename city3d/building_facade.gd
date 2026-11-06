@@ -10,6 +10,7 @@ var count := 0
 var limit := 0
 var windows := 0
 var edges := 0
+var compact := false
 var transform := Transform3D.IDENTITY
 var materials: Array[Material]=[]
 var vertex_counts: Array[int]=[0,0,0]
@@ -92,6 +93,15 @@ func _window(x: float, y: float, timber: bool, balcony: bool):
             _box(Vector3(x+side*1.25,level+1.05,0.65),Vector3(0.055,0.055,1.3),FRAME,1)
             _box(Vector3(x+side*1.25,level+0.65,0.15),Vector3(0.055,0.9,0.055),FRAME,1)
 
+func _compact_window(x: float, y: float):
+    if count+5>limit:return
+    _box(Vector3(x,y,0.08),Vector3(1.6,1.65,0.15),Color("343f41"),1)
+    _box(Vector3(x,y,0.18),Vector3(1.38,1.40,0.025),Color("466166"),2)
+    _box(Vector3(x,y,0.21),Vector3(0.055,1.42,0.06),FRAME,1)
+    _box(Vector3(x,y-0.85,0.23),Vector3(1.7,0.12,0.35),TRIM)
+    _box(Vector3(x,y+0.85,0.23),Vector3(1.7,0.10,0.32),TRIM)
+    windows+=1
+
 func _door(x: float, shop: bool):
     _box(Vector3(x,1.25,0.08),Vector3(1.55,2.5,0.18),Color("302b25"),1)
     _box(Vector3(x,1.2,0.19),Vector3(1.27,2.3,0.06),WOOD,1)
@@ -114,8 +124,9 @@ func _shutter(x: float):
         _box(Vector3(x,0.25+slat*0.21,0.31),Vector3(2.08,0.035,0.045),Color("a0aaa1"),1)
     _box(Vector3(x,2.85,0.64),Vector3(2.65,0.12,1.3),Color("65766a"),1)
 
-func build(parent: Node3D, polygon: PackedVector2Array, height: float, style: int, focus: Vector3, box_limit := 640, pitched := false) -> int:
+func build(parent: Node3D, polygon: PackedVector2Array, height: float, style: int, focus: Vector3, box_limit := 640, pitched := false, example := false) -> int:
     limit=box_limit
+    compact=example
     var area:=0.0
     for i in range(polygon.size()): area+=polygon[i].cross(polygon[(i+1)%polygon.size()])
     var faces: Array=[]
@@ -139,7 +150,7 @@ func build(parent: Node3D, polygon: PackedVector2Array, height: float, style: in
         transform=Transform3D(Basis(Vector3.UP,atan2(outward.x,outward.z)),Vector3(middle.x,0,middle.y))
         var length:=a.distance_to(b)
         var start:=count
-        var floor_count:=clampi(roundi(height/3),1,6)
+        var floor_count:=clampi(roundi(height/3),1,12 if compact else 6)
         var floor_pitch:=height/floor_count
         var allowance:=maxi(32,floori((box_limit-count)*length/remaining_length))
         remaining_length-=length
@@ -151,7 +162,8 @@ func build(parent: Node3D, polygon: PackedVector2Array, height: float, style: in
         if not pitched:
             _box(Vector3(0,height+0.32,-0.02),Vector3(length,0.65,0.2),Color("a5a294"))
             _box(Vector3(0,height+0.67,0),Vector3(length+0.1,0.12,0.32),TRIM)
-        var columns:=mini(maxi(1,floori(length/3.1)),maxi(1,floori((allowance-(count-start)-5)/float(floor_count*12))))
+        var window_cost:=5 if compact else 12
+        var columns:=mini(maxi(1,floori(length/3.1)),maxi(1,floori((allowance-(count-start)-14)/float(floor_count*window_cost))))
         var pitch:=length/columns
         var openings: Array=[]
         for column in range(columns):
@@ -160,17 +172,18 @@ func build(parent: Node3D, polygon: PackedVector2Array, height: float, style: in
             openings.append({"x":x,"distance":world.distance_squared_to(focus)})
         openings.sort_custom(func(a,b): return a.distance<b.distance)
         for opening in openings:
-            if count-start+12>allowance: break
+            if count-start+window_cost>allowance: break
             var x: float=opening.x
             for floor_index in range(floor_count):
-                if count-start+12>allowance: break
+                if count-start+window_cost>allowance: break
                 if not door_added and floor_index==0:
                     _door(x,style==3)
                     door_added=true
                 elif style==3 and floor_index==0 and pitch>2.5 and count-start+15<=allowance:
                     _shutter(x)
                 else:
-                    _window(x,1.55+floor_index*floor_pitch,style==0,style>=2 and floor_index>0 and int(round(x/pitch))%2==0 and count-start+27+12*(floor_count*(columns-1))<=allowance)
+                    if compact:_compact_window(x,1.55+floor_index*floor_pitch)
+                    else:_window(x,1.55+floor_index*floor_pitch,style==0,style>=2 and floor_index>0 and int(round(x/pitch))%2==0 and count-start+27+12*(floor_count*(columns-1))<=allowance)
         # Rainwater downpipe at the end, with offset brackets.
         if count+4<limit:
             _box(Vector3(length/2-0.2,height/2,0.18),Vector3(0.08,height,0.08),Color("666e67"),1)
