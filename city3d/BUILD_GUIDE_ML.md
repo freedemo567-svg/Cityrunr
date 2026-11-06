@@ -1,5 +1,7 @@
 <!-- coderabbit-ai-generated:v1 -->
 
+<!-- coderabbit-ai-generated-section:v1:96b035e7ebb760e02aded6bc0d82cd385dcb97d94f1dea51c89a91dfaa71d50f -->
+
 <!-- coderabbit-ai-generated-section:v1:1f8941d0eb4f16c65b0c32ff7b4e3c65261da60660b49df158d528c71a6e88a5 -->
 
 # City Run 3D — മലയാളം setup guide
@@ -141,5 +143,13 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.android" | Out-Null
 ## പരിശോധനയുടെ പരിധി
 
 ഈ source-ന്റെ gameplay പരിശോധനകൾ Linux-ൽ നടത്തിയിട്ടുണ്ട്. ഈ മാറ്റത്തിൽ APK build/signature, Windows, Android ഫോൺ പരിശോധനകൾ നടത്തിയിട്ടില്ല. ഫോണിലെ touch controls, graphics, audio, performance എന്നിവ device-ൽ പരീക്ഷിക്കണം.
+
+<!-- /coderabbit-ai-generated:v1 -->
+## Police, fuel, sound, collision scratches
+
+വാഹനം നിർത്തിയശേഷം **POLICE** / **FUEL** അമർത്തിയാൽ അടുത്ത game station-ന്റെ സമീപത്തെ road-ലേക്ക് പോകാം. Police station-ൽ രണ്ട് officers, marked patrol car; fuel station-ൽ PETROL/DIESEL pumps ഉണ്ട്. ഇവ game സൃഷ്ടിച്ച locations ആണ്. Clear mapped roadside ലഭിക്കുന്ന പ്രദേശങ്ങളിൽ 5 km / 8 km പരിധിക്കുള്ളിൽ station നിലനിർത്താൻ യാത്രയ്ക്കിടെ placement refresh ചെയ്യും. Map/clear roadside ഇല്ലാത്തിടത്ത് coverage ഉറപ്പില്ല.
+
+Engine, tyre/road, collision sound layers synthesized ആണ്; real engine recording അല്ല. 2 m/s-നു മുകളിലുള്ള physical impact-ൽ paint scratches കാണും; ഓരോ vehicle type-നും save ചെയ്യും. Red signal-ൽ നിൽക്കുന്നത് damage ഉണ്ടാക്കില്ല. Cosmetic scratches മാത്രമാണ്; body deformation/mechanical damage ഇല്ല. Android device-ൽ sound ഇതുവരെ പരിശോധിച്ചിട്ടില്ല.
+
 
 <!-- /coderabbit-ai-generated:v1 -->

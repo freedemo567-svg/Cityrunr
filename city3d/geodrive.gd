@@ -4,6 +4,11 @@ const DATA := "res://assets/kerala/tiles/"
 const GeoVisuals = preload("res://geographic_visuals.gd")
 var life: Node
 var dynamics=preload("res://driving_physics.gd").new()
+var services: Node3D
+var damage=preload("res://vehicle_damage.gd").new()
+var physical_obstacle:=false
+var crash_audio: AudioStreamPlayer
+var road_audio: AudioStreamPlayer
 var manifest: Dictionary={}
 var illustrative: Array=[]
 var illustrative_tiles: Dictionary={}
@@ -149,8 +154,9 @@ func _ready():
         for button in touches.values():button.get_meta("up").call()
         touches.clear()
         horn.stop()
-        if paused: engine_audio.stop()
-        else: engine_audio.play(),func(): pass)
+        if paused:
+            engine_audio.stop();road_audio.stop();crash_audio.stop()
+        elif in_car:engine_audio.play(),func(): pass)
     _button(layer,"ACCEL",Vector2(1160,495),Vector2(85,160),func(): pedal=not paused,func(): pedal=false)
     _button(layer,"BRAKE",Vector2(1045,520),Vector2(100,130),func(): brake=not paused,func(): brake=false)
     _button(layer,"GEAR: D",Vector2(920,590),Vector2(100,65),func():
@@ -166,6 +172,13 @@ func _ready():
     dashboard.set_script(preload("res://driving_dashboard.gd"))
     dashboard.world=self
     layer.add_child(dashboard)
+    services=Node3D.new();services.set_script(preload("res://local_services.gd"));services.world=self;add_child(services)
+    crash_audio=AudioStreamPlayer.new();crash_audio.stream=preload("res://vehicle_audio.gd").new().impact();add_child(crash_audio)
+    road_audio=AudioStreamPlayer.new();road_audio.stream=preload("res://vehicle_audio.gd").new().road();add_child(road_audio)
+    _button(layer,"POLICE",Vector2(935,30),Vector2(135,45),func():
+        if services.stations.has("Police Station"):_go(services.stations["Police Station"].point),func():pass)
+    _button(layer,"FUEL",Vector2(935,90),Vector2(135,45),func():
+        if services.stations.has("Petrol / Diesel"):_go(services.stations["Petrol / Diesel"].point),func():pass)
     if FileAccess.file_exists(DATA+"manifest.json"):
         manifest=JSON.parse_string(FileAccess.get_file_as_string(DATA+"manifest.json"))
         _search("Kochi")
@@ -237,8 +250,11 @@ func _go(point: Array):
     for tile in loaded.values():
         for segment in tile.roads:
             var closest:=Geometry3D.get_closest_point_to_segment(car.position,segment[0],segment[1])
-            var distance:=closest.distance_squared_to(car.position)
-            if distance<best:best=distance;nearest=closest
+            var direction: Vector3=(segment[1]-segment[0]).normalized()
+            for offset in [0.0,-5.0,5.0,-15.0,15.0,-30.0,30.0,-60.0,60.0]:
+                var candidate:=Geometry3D.get_closest_point_to_segment(closest+direction*offset,segment[0],segment[1])
+                var distance:=candidate.distance_squared_to(car.position)
+                if distance<best and not _blocked(candidate):best=distance;nearest=candidate
     car.position=nearest
     details.refresh(loaded.values(),car.position,true)
     if is_instance_valid(life):life.relocate()
@@ -246,6 +262,10 @@ func _go(point: Array):
 func _vehicle():
     for node in car.get_children():car.remove_child(node);node.queue_free()
     fleet.build(car,kind)
+    damage.attach(car,kind)
+    if is_instance_valid(engine_audio):
+        engine_audio.stream=preload("res://vehicle_audio.gd").new().engine(kind)
+        if in_car and not paused:engine_audio.play()
     if is_instance_valid(life):life.apply_vehicle()
     if is_instance_valid(horn):horn.pitch_scale=[1.0,1.18,1.1,0.7,0.9,0.65][kind]
 func _stream():
@@ -342,11 +362,14 @@ func _load_tile(key: Vector2i):
         var dimensions:=maximum-minimum
         var bounds:=Rect2(minimum,dimensions).grow(2.8 if data.buildings[i].size()>3 and data.buildings[i][3].name=="Gas Station" else 1.3)
         boxes.append(bounds)
+        var polygon:=GeoVisuals.footprint(points,Vector3.ZERO)
+        if polygon.is_empty():continue
+        var obstacle={"bounds":bounds,"polygon":polygon}
         for gx in range(floori(bounds.position.x/32),floori(bounds.end.x/32)+1):
             for gz in range(floori(bounds.position.y/32),floori(bounds.end.y/32)+1):
                 var cell:=Vector2i(gx,gz)
                 if not grid.has(cell):grid[cell]=[]
-                grid[cell].append(bounds)
+                grid[cell].append(obstacle)
     var building_mesh:=GeoVisuals.buildings(data.buildings,node.position)
     if building_mesh:
         var buildings:=MeshInstance3D.new()
@@ -360,20 +383,61 @@ func _load_tile(key: Vector2i):
         node.add_child(buildings)
     loaded[key]={"node":node,"roads":roads,"rail":data.rail,"buildings":data.buildings,"boxes":boxes,"grid":grid}
 func _blocked(next: Vector3) -> bool:
+    if is_instance_valid(services) and services.blocked(next):return true
     var cell:=Vector2i(floori(next.x/32),floori(next.z/32))
     for tile in loaded.values():
-        for bounds in tile.grid.get(cell,[]):
-            if bounds.has_point(Vector2(next.x,next.z)):return true
+        for obstacle in tile.grid.get(cell,[]):
+            if obstacle.bounds.has_point(Vector2(next.x,next.z)) and Geometry2D.is_point_in_polygon(Vector2(next.x,next.z),obstacle.polygon):return true
     return false
+func _edge_distance(point: Vector2, polygon: PackedVector2Array) -> float:
+    var best:=INF
+    for i in range(polygon.size()):
+        best=minf(best,point.distance_to(Geometry2D.get_closest_point_to_segment(point,polygon[i],polygon[(i+1)%polygon.size()])))
+    return best
+func _building_transition(start: Vector3, finish: Vector3) -> bool:
+    var a:=Vector2(start.x,start.z)
+    var b:=Vector2(finish.x,finish.z)
+    var cell:=Vector2i(floori(finish.x/32),floori(finish.z/32))
+    for tile in loaded.values():
+        for obstacle in tile.grid.get(cell,[]):
+            if not obstacle.bounds.has_point(b) or not Geometry2D.is_point_in_polygon(b,obstacle.polygon):continue
+            # A saved/spawned position inside a footprint must be able to move out.
+            if Geometry2D.is_point_in_polygon(a,obstacle.polygon) and _edge_distance(b,obstacle.polygon)<_edge_distance(a,obstacle.polygon):continue
+            return true
+    return false
+func _rect_transition(start: Vector3, finish: Vector3, bounds: Rect2) -> bool:
+    var a:=Vector2(start.x,start.z)
+    var b:=Vector2(finish.x,finish.z)
+    if not bounds.has_point(b):return false
+    if bounds.has_point(a):
+        var da:=minf(minf(a.x-bounds.position.x,bounds.end.x-a.x),minf(a.y-bounds.position.y,bounds.end.y-a.y))
+        var db:=minf(minf(b.x-bounds.position.x,bounds.end.x-b.x),minf(b.y-bounds.position.y,bounds.end.y-b.y))
+        if db<da:return false
+    return true
 func _path_blocked(start: Vector3, finish: Vector3) -> bool:
+    physical_obstacle=false
     var count:=maxi(1,ceili(start.distance_to(finish)))
     for i in range(1,count+1):
         var point:=start.lerp(finish,float(i)/count)
-        if _blocked(point) or train.blocks(point) or life.traffic_blocks(point):return true
+        if _building_transition(start,point):physical_obstacle=true;return true
+        for bounds in services.bounds:
+            if _rect_transition(start,point,bounds):physical_obstacle=true;return true
+        if train.blocks(point):
+            var a: Vector3=train.to_local(start)
+            var b: Vector3=train.to_local(point)
+            var rect:=Rect2(-2.4,-20,4.8,27)
+            if _rect_transition(Vector3(a.x,0,a.z),Vector3(b.x,0,b.z),rect):physical_obstacle=true;return true
+        for item in life.traffic:
+            var distance: float=item.node.position.distance_to(point)
+            if distance<2.3 and (item.node.position.distance_to(start)>=2.3 or distance<=item.node.position.distance_to(start)):
+                physical_obstacle=true;return true
+        if life.crossings.blocks_transition(start,point,in_car):return true
     return false
 func _physics_process(delta):
     if manifest.is_empty() or paused:return
     delta=minf(delta,0.1)
+    services.refresh(car.position if in_car else life.player.position)
+    damage.update(car,kind,delta)
     var vehicle_before:=car.position
     life.tick(delta)
     if not in_car:
@@ -392,7 +456,9 @@ func _physics_process(delta):
     var angle: float=dynamics.steer(drive_input,speed,delta)
     car.rotation.y-=speed/maxf(2.0,fleet.LENGTHS[kind]*0.6)*tan(angle)*delta
     var next:=car.position+Vector3(sin(car.rotation.y),0,cos(car.rotation.y))*speed*minf(delta,0.1)
-    if _path_blocked(car.position,next):speed=0
+    if _path_blocked(car.position,next):
+        if physical_obstacle and damage.impact(car,kind,speed,fleet.LENGTHS[kind]):crash_audio.play();life.save()
+        speed=0
     else:car.position=next
     _stream()
     var travelled:=vehicle_before.distance_to(car.position)*signf(speed)
@@ -406,7 +472,14 @@ func _physics_process(delta):
     var lamps: Dictionary=car.get_meta("lamps",{})
     if lamps.has("Brakelight"): lamps.Brakelight.emission_energy_multiplier=4.0 if stopping else 0.2
     details.refresh(loaded.values(),car.position)
-    engine_audio.pitch_scale=clampf(0.85+absf(speed)/22,0.85,2.0)
+    var rpm:=fposmod(absf(speed),6.0)/6.0
+    engine_audio.pitch_scale=lerpf(engine_audio.pitch_scale,0.8+rpm*0.8+(0.2*throttle_level if throttle else 0.0),1-exp(-8*delta))
+    engine_audio.volume_db=lerpf(engine_audio.volume_db,-20.0+(7 if throttle else 0),1-exp(-6*delta))
+    if absf(speed)>0.5:
+        road_audio.pitch_scale=clampf(0.65+absf(speed)/30,0.65,2.0)
+        road_audio.volume_db=clampf(-36+absf(speed)*0.65,-36,-14)
+        if not road_audio.playing:road_audio.play()
+    else:road_audio.stop()
     if horn_down and not horn.playing:horn.play()
     var camera_heading:=car.rotation.y+PI+yaw
     var camera_distance: float=7.5+maxf(0,fleet.LENGTHS[kind]-4.2)*0.5
@@ -466,4 +539,6 @@ func _notification(what):
         touches.clear()
         if is_instance_valid(horn):horn.stop()
         if is_instance_valid(engine_audio):engine_audio.stop()
+        if is_instance_valid(road_audio):road_audio.stop()
+        if is_instance_valid(crash_audio):crash_audio.stop()
         if is_instance_valid(dashboard):dashboard.reset()
