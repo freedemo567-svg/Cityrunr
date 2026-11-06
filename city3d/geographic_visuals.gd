@@ -31,28 +31,29 @@ static func wall(surface: SurfaceTool, a: Vector3, b: Vector3, height: float, co
         surface.set_uv(coords[i])
         surface.add_vertex(points[i])
 
+static func footprint(points: Array, origin: Vector3) -> PackedVector2Array:
+    var polygon:=PackedVector2Array()
+    for point in points:
+        var local:=Vector2(float(point[0])-origin.x,float(point[1])-origin.z)
+        if polygon.is_empty() or local.distance_squared_to(polygon[-1])>0.0001:polygon.append(local)
+    if polygon.size()>2 and polygon[0].distance_squared_to(polygon[-1])<0.0001:polygon.remove_at(polygon.size()-1)
+    if polygon.size()<3:return PackedVector2Array()
+    if Geometry2D.triangulate_polygon(polygon).is_empty():
+        var minimum:=Vector2(INF,INF)
+        var maximum:=Vector2(-INF,-INF)
+        for point in polygon:
+            minimum=minimum.min(point);maximum=maximum.max(point)
+        polygon=PackedVector2Array([minimum,Vector2(maximum.x,minimum.y),maximum,Vector2(minimum.x,maximum.y)])
+    return polygon
 static func buildings(entries: Array, origin: Vector3) -> ArrayMesh:
     if entries.is_empty(): return null
     var surface:=SurfaceTool.new()
     surface.begin(Mesh.PRIMITIVE_TRIANGLES)
     var made:=false
     for entry in entries:
-        var polygon:=PackedVector2Array()
-        for point in entry[1]:
-            var local:=Vector2(float(point[0])-origin.x,float(point[1])-origin.z)
-            if polygon.is_empty() or local.distance_squared_to(polygon[-1])>0.0001: polygon.append(local)
-        if polygon.size()>2 and polygon[0].distance_squared_to(polygon[-1])<0.0001: polygon.remove_at(polygon.size()-1)
+        var polygon:=footprint(entry[1],origin)
         if polygon.size()<3: continue
         var indices:=Geometry2D.triangulate_polygon(polygon)
-        if indices.is_empty():
-            # Invalid source outlines still get a visible fallback footprint.
-            var minimum:=Vector2(INF,INF)
-            var maximum:=Vector2(-INF,-INF)
-            for point in polygon:
-                minimum=minimum.min(point)
-                maximum=maximum.max(point)
-            polygon=PackedVector2Array([minimum,Vector2(maximum.x,minimum.y),maximum,Vector2(minimum.x,maximum.y)])
-            indices=Geometry2D.triangulate_polygon(polygon)
         var area:=0.0
         for i in range(polygon.size()): area+=polygon[i].cross(polygon[(i+1)%polygon.size()])
         var height: float=entry[2]

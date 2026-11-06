@@ -84,3 +84,14 @@ func blocks(point: Vector3) -> bool:
             var distance:=point.distance_to(junction.point)
             if distance>6 and distance<8:return true
     return false
+func blocks_transition(start: Vector3, finish: Vector3, signals_enabled:=true) -> bool:
+    for gate in gates:
+        var before: float=start.distance_to(gate.point)
+        var after: float=finish.distance_to(gate.point)
+        if gate.closed and after<7 and (before>=7 or after<before):return true
+    if signals_enabled and elapsed<9:
+        for junction in signals:
+            var before: float=start.distance_to(junction.point)
+            var after: float=finish.distance_to(junction.point)
+            if after<8 and before>=6 and after<before:return true
+    return false

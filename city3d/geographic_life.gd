@@ -121,7 +121,8 @@ func toggle_car():
     world.horn_down=false;world.horn.stop()
     world.dashboard.reset()
     if world.in_car:world.engine_audio.play()
-    else:world.engine_audio.stop()
+    else:
+        world.engine_audio.stop();world.road_audio.stop();world.crash_audio.stop()
     save()
 func traffic_blocks(point: Vector3) -> bool:
     if crossings.blocks(point):return true
@@ -208,7 +209,12 @@ func tick(delta: float):
         var target: Vector3=item.b if item.forward else item.a
         var displacement:=target-node.position
         var advance:=displacement.normalized()*minf(displacement.length(),5*delta)
-        if node.position.distance_to(focus)>9 and not world.train.blocks(node.position+advance) and not crossings.blocks(node.position+advance):
+        if node.position.distance_to(focus)<9 and (node.position+advance).distance_to(focus)<node.position.distance_to(focus):
+            item.forward=not item.forward
+            target=item.b if item.forward else item.a
+            displacement=target-node.position
+            advance=displacement.normalized()*minf(displacement.length(),5*delta)
+        if not world.train.blocks(node.position+advance) and not crossings.blocks_transition(node.position,node.position+advance):
             node.position+=advance
             node.rotation.y=atan2(displacement.x,displacement.z)
             world.fleet.animate(node,advance.length(),0)
@@ -233,7 +239,7 @@ func spawn_traffic(focus: Vector3):
     for tile in world.loaded.values():
         for segment in tile.roads:
             if traffic.size()>=8:return
-            if segment[0].distance_to(focus)>160 or segment[0].distance_to(segment[1])<25:continue
+            if segment[0].distance_to(focus)>160 or segment[0].distance_to(focus)<12 or segment[0].distance_to(segment[1])<25:continue
             var node:=Node3D.new()
             world.add_child(node)
             world.fleet.build(node,0,false)
@@ -254,7 +260,7 @@ func fire():
 func save():
     update_garage()
     if world.manifest.is_empty():return
-    var data={"format":1,"car":[world.car.position.x,world.car.position.z],"player":[player.position.x,player.position.z],"yaw":world.car.rotation.y,"orbit":world.yaw,"driving":world.in_car,"vehicle":world.kind,"character":character,"paint":paint,"daylight":daylight,"headlights":headlights,"distance":distance_driven,"top_speed":top_speed,"discovered":discovered,"money":money}
+    var data={"damage":world.damage.records,"format":1,"car":[world.car.position.x,world.car.position.z],"player":[player.position.x,player.position.z],"yaw":world.car.rotation.y,"orbit":world.yaw,"driving":world.in_car,"vehicle":world.kind,"character":character,"paint":paint,"daylight":daylight,"headlights":headlights,"distance":distance_driven,"top_speed":top_speed,"discovered":discovered,"money":money}
     var file:=FileAccess.open("user://kerala_save.tmp",FileAccess.WRITE)
     if file:
         file.store_string(JSON.stringify(data));file.close()
@@ -271,6 +277,7 @@ func restore():
     if not data is Dictionary:return
     character=int(number(data.get("character"),0,1));paint=int(number(data.get("paint"),0,4))
     daylight=int(number(data.get("daylight"),0,2));headlights=data.get("headlights",false)==true
+    world.damage.restore(data.get("damage",{}))
     world.kind=int(number(data.get("vehicle"),0,5));world._vehicle()
     human.set_appearance(character);apply_daylight()
     distance_driven=number(data.get("distance"),0,1e12);top_speed=number(data.get("top_speed"),0,300)

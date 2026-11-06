@@ -1,5 +1,7 @@
 <!-- coderabbit-ai-generated:v1 -->
 
+<!-- coderabbit-ai-generated-section:v1:467ddfe2bb179d58b94f38272e06b41b55c9bcd49760be18ff283041bd4476c7 -->
+
 <!-- coderabbit-ai-generated-section:v1:a2bcbd6f83adc3f210c528bdf039f562572408791085d43ae56c387926e7067e -->
 
 <!-- coderabbit-ai-generated-section:v1:18e3423ad9066d47bbe72dcf0e5639bd3e681a24b4440c9c60bb5f532b360066 -->
@@ -33,7 +35,13 @@ Read [BUILD_GUIDE_ML.md](BUILD_GUIDE_ML.md) for Windows and Android setup. Build
 - Garage → CHARACTER switches male/female presentations. They share the animated body and scanned head; the female presentation adds a different outfit and hairstyle. On-foot play and character selection are available throughout the loaded Kerala world.
 - Horn repeats while held and stops on release, pause or exit. Pitch varies by type; engine audio is synthesized.
 
-Traffic follows nearby mapped road segments, with a cap of eight cars. Illustrative signal cycles are placed at mapped junction candidates, and barriers close near mapped road/rail crossings when the train approaches. These are generated controls, not surveyed signal locations or a road network routing simulator. The train uses connected mapped railway and bridge tags generate barriers. The district overview pauses the shared world. Optional FIRE/police interactions remain available on foot; buildings block shots. Fictional Town landmarks, road layouts and canals have been retired; real mapped geometry remains authoritative.
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:038f40515f5c4e1d7d494ff6c057a16512347d9d3cc1d77846aeff13d554c2d0 -->
+
+Traffic follows nearby mapped road segments, with a cap of eight cars. Illustrative signal cycles are placed at mapped junction candidates, and barriers close near mapped road/rail crossings when the train approaches. These are generated controls, not surveyed signal locations or a road network routing simulator. The train uses connected mapped railway and bridge tags generate barriers. The district overview pauses the shared world. Optional FIRE/police interactions remain available on foot; buildings block shots. Fictional Town landmarks, road layouts and canals have been retired; real mapped geometry remains authoritative. Traffic moves away when it approaches the player; backing away from a red signal or closed gate is possible. Building collisions follow the visible footprint, so empty corners of a bounding rectangle do not block roads. Search selects an unblocked nearby road position when one is available.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 <!-- coderabbit-ai-generated:v1 -->
 
@@ -141,6 +149,16 @@ Use isolated `XDG_DATA_HOME`/`APPDATA` directories for direct gameplay tests. `-
 - Horn: **Car signal** by Yaroslav_Novikov, [OpenGameArt](https://opengameart.org/content/car-signal), CC0. One recording is reused with pitch variations.
 
 <!-- /coderabbit-ai-generated:v1 -->
+
+
+<!-- /coderabbit-ai-generated:v1 -->
+## Nearby services, audio and collision marks
+
+POLICE and FUEL take a stopped vehicle to the roadside near the local service. Two khaki-clad officers and a marked patrol car stand at the police station; the fuel station has separate PETROL and DIESEL pump labels. These are fictional game outposts, not real station locations. Clear mapped roadside sites are searched within 600 m of the player; police/fuel placement refreshes after 2 km/3 km, with retries after moving 250 m. This keeps service within the requested 5 km/8 km radius in covered areas. Empty map areas or areas without a clear roadside site cannot guarantee coverage. Placement reserves space away from mapped roads, rail and buildings; the forecourt remains walkable.
+
+Driving sound combines synthesized combustion, vehicle-specific pulses, speed/load pitch, tyre rolling noise and a collision transient. These are not recorded engine samples. Pause, background and leaving the vehicle stop driving audio. Physical impacts above 2 m/s add localized metal scratches to painted surfaces, with a short repeat cooldown and up to 12 marks per vehicle type. Marks persist in saves; red signals do not cause damage. Scratches are cosmetic: there is no body deformation or mechanical damage.
+
+Native integration check: `"$GODOT_BIN" --path city3d --script res://tests/services_damage.gd` (use an isolated XDG_DATA_HOME for a disposable save). Android device audio remains to be checked.
 
 
 <!-- /coderabbit-ai-generated:v1 -->
