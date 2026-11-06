@@ -5,6 +5,8 @@ var town = preload("res://town.gd").new()
 var human_visual: Node3D
 var dashboard: Control
 var vehicle_kind := 0
+var character_kind := 0
+var character_button: Button
 var fleet=preload("res://fleet.gd").new()
 var horn_down := false
 var features=preload("res://infrastructure.gd").new()
@@ -454,7 +456,7 @@ func _record_drive(distance: float, speed: float):
 
 func _save_progress():
     var data:=legacy_progress.duplicate(true)
-    data.merge({"format":3,"vehicle":vehicle_kind,"paint":paint_index,"daylight":daylight,"headlights":headlights,"distance":distance_driven,"top_speed":top_speed,"discovered":discovered,"camera_angle":camera_angle,"camera_pitch":camera_pitch,"money":money,"player":[player.position.x,player.position.z],"car":[car.position.x,car.position.z],"car_yaw":car.rotation.y,"driving":in_car},true)
+    data.merge({"format":3,"vehicle":vehicle_kind,"character":character_kind,"paint":paint_index,"daylight":daylight,"headlights":headlights,"distance":distance_driven,"top_speed":top_speed,"discovered":discovered,"camera_angle":camera_angle,"camera_pitch":camera_pitch,"money":money,"player":[player.position.x,player.position.z],"car":[car.position.x,car.position.z],"car_yaw":car.rotation.y,"driving":in_car},true)
     var f := FileAccess.open("user://city_save.json",FileAccess.WRITE)
     if f: f.store_string(JSON.stringify(data))
 
@@ -466,6 +468,8 @@ func _load_progress():
     if data is Dictionary:
         legacy_progress=data.duplicate(true)
         money=maxi(int(data.get("money",0)),0)
+        var saved_character=data.get("character",0)
+        _set_character(clampi(int(saved_character),0,1) if (saved_character is int or saved_character is float) and is_finite(float(saved_character)) else 0)
         _set_vehicle(clampi(int(data.get("vehicle",0)),0,fleet.NAMES.size()-1))
         paint_index=clampi(int(data.get("paint",0)),0,PAINTS.size()-1)
         daylight=clampi(int(data.get("daylight",0)),0,2)
@@ -658,7 +662,7 @@ func _drive(delta: float, steering: float, throttle: float, braking: bool, rever
             car_speed=move_toward(car_speed,0,3*step)
         var offroad:=town.nearest(car.position).distance_to(car.position)>6
         if offroad: car_speed=clampf(car_speed,-4,6)
-        car.rotation.y+=steering*1.4*step*clampf(car_speed/8,-1,1)
+        car.rotation.y-=steering*1.4*step*clampf(car_speed/8,-1,1)
         var forward:=Vector3(sin(car.rotation.y),0,cos(car.rotation.y))
         var next:=car.position+forward*car_speed*step
         if abs(next.x)>WORLD_LIMIT or abs(next.z)>WORLD_LIMIT or town.blocked(next,2 if vehicle_kind==0 else maxf(1,fleet.LENGTHS[vehicle_kind]/2)) or _traffic_blocked(next,3.4) or features.blocks_vehicle(car.position,next):
@@ -843,10 +847,13 @@ func _make_garage(layer: CanvasLayer):
         _vehicle_lights()
         _garage_update(),func(): pass)
     var help:=Label.new()
-    help.text="Roam freely. Find four town landmarks at your own pace.\nYour distance, top speed and discoveries save automatically.\nStop the car before opening the garage."
+    help.text="Roam freely and find four town landmarks.\nYour progress saves automatically.\nStop the car before opening the garage."
     help.position=Vector2(32,250)
-    help.add_theme_font_size_override("font_size",19)
+    help.add_theme_font_size_override("font_size",17)
     garage_panel.add_child(help)
+    character_button=_button(garage_panel,"CHARACTER: MALE",Vector2(508,245),Vector2(210,65),func():
+        _set_character(1-character_kind)
+        _garage_update(),func(): pass)
     _button(garage_panel,"VEHICLE",Vector2(32,360),Vector2(190,60),func():
         _set_vehicle((vehicle_kind+1)%fleet.NAMES.size())
         _garage_update(),func(): pass)
@@ -858,7 +865,12 @@ func _make_garage(layer: CanvasLayer):
 
 func _garage_update():
     garage_status.text="%s / %s  |  %s  |  Lights %s" % [fleet.NAMES[vehicle_kind],PAINT_NAMES[paint_index],["Day","Sunset","Evening"][daylight],"ON" if headlights else "OFF"]
+    character_button.text="CHARACTER: %s" % ["MALE","FEMALE"][character_kind]
     _save_progress()
+
+func _set_character(kind: int):
+    character_kind=clampi(kind,0,1)
+    human_visual.set_appearance(character_kind)
 
 func _toggle_garage():
     if garage_panel.visible:
