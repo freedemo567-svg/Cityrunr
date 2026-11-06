@@ -20,11 +20,36 @@ func run():
     var arrays:=mesh.surface_get_arrays(0)
     var vertices: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
     var normals: PackedVector3Array=arrays[Mesh.ARRAY_NORMAL]
+    if not require(normals[0].z< -0.9,"Footprint wall normal does not face outward"):return
     var roof_area:=0.0
     for i in range(0,vertices.size(),3):
         if normals[i].y>0.9:
             roof_area+=(vertices[i+1]-vertices[i]).cross(vertices[i+2]-vertices[i]).length()/2
     if not require(absf(roof_area-3.0)<0.01,"Building roof does not follow mapped footprint"):return
+    # A long facade must distribute openings over its width, retain relief on
+    # both polygon windings, and use at most three batched material surfaces.
+    var facade_polygon:=PackedVector2Array([Vector2(-20,-6),Vector2(20,-6),Vector2(20,6),Vector2(-20,6)])
+    for reversed in [false,true]:
+        var polygon:=facade_polygon.duplicate()
+        if reversed: polygon.reverse()
+        var building:=Node3D.new()
+        root.add_child(building)
+        var builder=preload("res://building_facade.gd").new()
+        var used: int=builder.build(building,polygon,9.0,2,Vector3(0,0,18),640)
+        var facade: MeshInstance3D=building.get_node("ArchitecturalFacade")
+        if not require(used<=640 and facade.mesh.get_surface_count()<=3 and facade.get_meta("detailed_edges")==4 and facade.get_meta("window_count")>=24,"Facade coverage or batch budget regressed"):return
+        var extent:=facade.mesh.get_aabb()
+        if not require(extent.position.x< -20 and extent.end.x>20 and extent.position.z< -6 and extent.end.z>6,"Facade relief is on the wrong side of an outline"):return
+        for material_index in range(facade.mesh.get_surface_count()):
+            var geometry:=facade.mesh.surface_get_arrays(material_index)
+            var points: PackedVector3Array=geometry[Mesh.ARRAY_VERTEX]
+            var face_normals: PackedVector3Array=geometry[Mesh.ARRAY_NORMAL]
+            if not require(points.size()<640*36,"Facade vertex count escaped its geometry budget"):return
+            for point in points:
+                if not require(point.is_finite(),"Non-finite building vertex"):return
+            for face_normal in face_normals:
+                if not require(absf(face_normal.length()-1)<0.01,"Invalid facade normal"):return
+        building.free()
     var train=Node3D.new()
     train.set_script(preload("res://geographic_train.gd"))
     root.add_child(train)
@@ -44,6 +69,23 @@ func run():
     var roads:=0
     for tile in scene.loaded.values():roads+=tile.roads.size()
     if not require(roads>20,"Mapped roads missing"):return
+    scene.details.refresh(scene.loaded.values(),scene.car.position,true)
+    if not require(scene.details.roots.size()>0 and scene.details.roots.size()<=52 and scene.details.budget>=0,"Near facade detail budget failed"):return
+    var tree_count:=0
+    for item in scene.details.roots:
+        if str(item.name).begins_with("LandscapeTree"):
+            tree_count+=1
+            if not require(scene.details._clear_for_tree(scene.loaded.values(),item.position),"Tree overlaps mapped transport or buildings"):return
+    if not require(tree_count>0 and tree_count<=16,"Landscape tree budget failed"):return
+    var old_detail: Node3D=scene.details.roots[0]
+    scene.details.refresh([],scene.car.position+Vector3(1000,0,0),true)
+    if not require(scene.details.roots.is_empty() and old_detail.get_parent()==null,"Far facade details were retained"):return
+    var fixture={"buildings":[[1,[[30,-4],[300,-4],[300,4],[30,4],[30,-4]],6],[2,[[5,12],[15,12],[15,20],[5,20],[5,12]],6],[3,[[-15,12],[-5,12],[-5,20],[-15,20],[-15,12]],6]],"boxes":[],"roads":[],"rail":[]}
+    scene.details.refresh([fixture],Vector3.ZERO,true)
+    var facades=scene.details.roots.filter(func(item): return str(item.name).begins_with("FacadeDetail"))
+    if not require(facades.size()==3,"Nearby wall excluded because building center is distant"):return
+    if not require(scene.details.find_child("TiledRoof",true,false)!=null and scene.details.find_child("RoofTank",true,false)!=null,"Near building roof geometry missing"):return
+    scene.details.refresh(scene.loaded.values(),scene.car.position,true)
     scene._load_tile(Vector2i(-10,-63))
     var track_tile=scene.loaded[Vector2i(-10,-63)].node
     var track_mesh: ArrayMesh=track_tile.get_node("RoadsAndRail").mesh
@@ -76,9 +118,11 @@ func run():
     scene.pedal=true
     scene._physics_process(0.1)
     if not require(scene.speed>0 and scene.car.position!=before,"Geographic driving failed"):return
+    if not require((scene.camera.position-scene.car.position).dot(Vector3(sin(scene.car.rotation.y),0,cos(scene.car.rotation.y)))<0,"Default camera is ahead of the vehicle"):return
     scene.handbrake=true
     scene._physics_process(0.1)
     if not require(scene.speed==0,"Handbrake did not stop vehicle"):return
+    if not require(scene.car.get_meta("lamps").Brakelight.emission_energy_multiplier>=3,"Geographic brake lamps did not brighten"):return
     scene.handbrake=false
     scene.pedal=false
     # Use an empty location while keeping the loaded map intact.
@@ -95,6 +139,7 @@ func run():
                 var start: Vector3=scene.car.position
                 scene._physics_process(0.1)
                 var right:=Vector3(-cos(heading),0,sin(heading))
+                if not require(scene.camera.global_basis.x.dot(right)>0.99,"Rear camera and screen-right steering disagree"):return
                 if not require((scene.car.position-start).dot(right)*direction>0 and (scene.car.rotation.y-heading)*direction*initial_speed<0,"Geographic wheel steering direction incorrect"):return
                 scene._input(touch(12,false,Vector2(155+70*direction,575)))
     scene.car.position=map_position
@@ -120,8 +165,10 @@ func run():
     scene.train.tick(0.1,focus)
     if not require(scene.train.active,"Pause test train did not start"):return
     var frozen_train: Vector3=scene.train.position
+    var frozen_wheel: Vector3=scene.car.get_meta("wheel_nodes")[0].rotation
     scene._physics_process(1.0)
     if not require(scene.train.position==frozen_train,"Train moved while paused"):return
+    if not require(scene.car.get_meta("wheel_nodes")[0].rotation==frozen_wheel,"Wheels moved while paused"):return
     scene.train.set_tracks(scene.loaded.values())
     scene.paused=false
     var center: Vector2i=scene.tile_center

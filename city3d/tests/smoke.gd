@@ -373,6 +373,14 @@ func run():
         if scene.car_speed<=0:
             push_error("fleet vehicle cannot accelerate"); quit(1); return
     scene.in_car=true
+    scene.camera_angle=0
+    scene.car.rotation.y=0.6
+    scene._update_camera(scene.car.position,1.0)
+    var forward:=Vector3(sin(0.6),0,cos(0.6))
+    var right:=Vector3(-cos(0.6),0,sin(0.6))
+    if (scene.camera.position-scene.car.position).dot(forward)>=0 or scene.camera.global_basis.x.dot(right)<0.99:
+        push_error("driving camera is not behind the vehicle"); quit(1); return
+    scene.car.rotation.y=0
     scene._start_horn()
     if not scene.horn.playing or scene.horn.stream.get_length()<0.2:
         push_error("horn sample failed"); quit(1); return

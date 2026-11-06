@@ -20,8 +20,8 @@ static func strip(surface: SurfaceTool, a: Vector3, b: Vector3, half_width: floa
     var side: Vector3=(b-a).normalized().cross(Vector3.UP)*half_width
     quad(surface,a-side,a+side,b+side,b-side,Vector3.UP,color)
 
-static func wall(surface: SurfaceTool, a: Vector3, b: Vector3, height: float, color: Color):
-    var normal: Vector3=(b-a).cross(Vector3.UP).normalized()
+static func wall(surface: SurfaceTool, a: Vector3, b: Vector3, height: float, color: Color, outward_sign: float):
+    var normal: Vector3=(b-a).cross(Vector3.UP).normalized()*outward_sign
     var length:=a.distance_to(b)
     var points: Array[Vector3]=[a,b,b+Vector3.UP*height,a,b+Vector3.UP*height,a+Vector3.UP*height]
     var coords: Array[Vector2]=[Vector2.ZERO,Vector2(length,0),Vector2(length,height),Vector2.ZERO,Vector2(length,height),Vector2(0,height)]
@@ -53,6 +53,8 @@ static func buildings(entries: Array, origin: Vector3) -> ArrayMesh:
                 maximum=maximum.max(point)
             polygon=PackedVector2Array([minimum,Vector2(maximum.x,minimum.y),maximum,Vector2(minimum.x,maximum.y)])
             indices=Geometry2D.triangulate_polygon(polygon)
+        var area:=0.0
+        for i in range(polygon.size()): area+=polygon[i].cross(polygon[(i+1)%polygon.size()])
         var height: float=entry[2]
         var wall_color: Color=WALL_COLORS[posmod(int(entry[0]),WALL_COLORS.size())]
         var roof: Color=ROOF_COLORS[posmod(int(entry[0]),ROOF_COLORS.size())]
@@ -61,7 +63,7 @@ static func buildings(entries: Array, origin: Vector3) -> ArrayMesh:
             var q: Vector2=polygon[(i+1)%polygon.size()]
             var a:=Vector3(p.x,0,p.y)
             var b:=Vector3(q.x,0,q.y)
-            wall(surface,a,b,height,wall_color)
+            wall(surface,a,b,height,wall_color,-1.0 if area>0 else 1.0)
         for i in range(0,indices.size(),3):
             var a: Vector2=polygon[indices[i]]
             var b: Vector2=polygon[indices[i+1]]

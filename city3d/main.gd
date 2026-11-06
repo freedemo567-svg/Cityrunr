@@ -74,9 +74,6 @@ var input_dir := Vector2.ZERO
 var money := 0
 var car_pos := Vector3(4, 0, 3)
 
-var car_scene = preload("res://assets/car/car-concept.glb")
-var detailed_car_scene=preload("res://assets/car/car-detail.glb")
-var facade_scene = preload("res://assets/facade/modular_urban_apartments_facade_1k.gltf")
 
 func _ready():
     for place in landmarks: place.position=town.nearest(place.position)
@@ -144,7 +141,8 @@ func _box(parent: Node3D, pos: Vector3, size: Vector3, color: Color, collision :
     return mesh
 
 func _world():
-    _box(self,Vector3(0,-0.3,0),Vector3(320,0.6,320),Color("697756"),true)
+    var ground_visual: MeshInstance3D=_box(self,Vector3(0,-0.3,0),Vector3(320,0.6,320),Color("697756"),true)
+    ground_visual.material_override=preload("res://surface_materials.gd").ground()
     _box(self,Vector3(-155,0.01,0),Vector3(10,0.02,320),Color("39868d"))
     for road_index in range(town.roads.size()):
         var road: PackedVector3Array=town.roads[road_index]
@@ -156,16 +154,16 @@ func _world():
             var b: Vector3=road[i+1]+Vector3(0,road_height,0)
             var side_a: Vector3=(road[i+1]-road[maxi(0,i-1)]).normalized().cross(Vector3.UP)*6
             var side_b: Vector3=(road[mini(road.size()-1,i+2)]-road[i]).normalized().cross(Vector3.UP)*6
-            for vertex in [a-side_a,a+side_a,b+side_b,a-side_a,b+side_b,b-side_b]: surface.add_vertex(vertex)
+            for vertex in [a-side_a,a+side_a,b+side_b,a-side_a,b+side_b,b-side_b]:
+                surface.set_uv(Vector2(vertex.x,vertex.z))
+                surface.add_vertex(vertex)
             if i%4==0:
                 var dash=_box(self,(a+b)/2+Vector3(0,0.02,0),Vector3(0.14,0.03,minf(a.distance_to(b),2.5)),Color("f2e8c2"))
                 dash.rotation.y=atan2(b.x-a.x,b.z-a.z)
         surface.generate_normals()
         var mesh:=MeshInstance3D.new()
         mesh.mesh=surface.commit()
-        mesh.material_override=_material(Color("353d40"))
-        # Roads are visible from either side of their generated ribbon.
-        mesh.material_override.cull_mode=BaseMaterial3D.CULL_DISABLED
+        mesh.material_override=preload("res://surface_materials.gd").road(true)
         add_child(mesh)
     add_child(architecture)
     for place in landmarks:
@@ -182,77 +180,31 @@ func _world():
         if i%3==0: _palm(town.buildings[i].position+Vector3(town.buildings[i].size.x/2+2,0,0))
 
 func _palm(pos: Vector3):
-    var trunk:=MeshInstance3D.new()
-    var cylinder:=CylinderMesh.new()
-    cylinder.top_radius=0.18
-    cylinder.bottom_radius=0.3
-    cylinder.height=7
-    trunk.mesh=cylinder
-    trunk.material_override=_material(Color("88725b"))
-    trunk.position=pos+Vector3(0,3.5,0)
-    add_child(trunk)
-    for i in range(7):
-        var leaf=_box(self,pos+Vector3(sin(i*TAU/7)*1.8,6.6,cos(i*TAU/7)*1.8),Vector3(0.6,0.1,4.5),Color("326c3c"))
-        leaf.rotation=Vector3(0.25,i*TAU/7,0)
+    var tree: Node3D=preload("res://assets/vegetation/island-tree.glb").instantiate()
+    tree.position=pos
+    tree.scale=Vector3.ONE*1.8
+    for visual in tree.find_children("*","GeometryInstance3D",true,false):
+        visual.visibility_range_end=100
+        visual.visibility_range_end_margin=10
+    add_child(tree)
 
 func _car_model(parent: Node3D):
     var kind: int=vehicle_kind if parent==car else int(parent.get_meta("kind",0))
-    if kind>0:
-        fleet.build(parent,kind)
-        if parent==car: _vehicle_accessories(parent)
-        return
-    # Preserve the player car silhouette; traffic uses the lighter shared mesh.
-    var model: Node3D = detailed_car_scene.instantiate() if parent==car else car_scene.instantiate()
-    model.name = "CarVisual"
-    model.scale = Vector3(0.72,0.85,0.85)
-    model.position.y = 0.135
-    parent.add_child(model)
-    var paints: Array[StandardMaterial3D] = []
-    var lamps: Dictionary = {}
-    for mesh in model.find_children("*", "MeshInstance3D", true, false):
-        if parent!=car: mesh.visibility_range_end=90
-        for surface in range(mesh.mesh.get_surface_count()):
-            var source = mesh.mesh.surface_get_material(surface)
-            if not source: continue
-            if source.resource_name.begins_with("Paint"):
-                var paint: StandardMaterial3D = source.duplicate()
-                paint.albedo_texture=null
-                paint.metallic=0.65
-                paint.roughness=0.3
-                paint.normal_enabled=false
-                paints.append(paint)
-                mesh.set_surface_override_material(surface,paint)
-            elif source.resource_name=="Glass":
-                # Compatibility renderer does not reproduce glTF transmission;
-                # tinted reflective glass avoids the imported opaque white pane.
-                var glass:=StandardMaterial3D.new()
-                glass.albedo_color=Color("253840")
-                glass.metallic=0.45
-                glass.roughness=0.12
-                mesh.set_surface_override_material(surface,glass)
-            elif source.resource_name in ["Brakelight","Headlight"]:
-                var lamp: StandardMaterial3D=source.duplicate()
-                lamp.emission_enabled=true
-                lamp.emission=Color("f9ebbc") if source.resource_name=="Headlight" else Color("eb2719")
-                lamp.emission_energy_multiplier=0.15
-                mesh.set_surface_override_material(surface,lamp)
-                lamps[source.resource_name]=lamp
-    parent.set_meta("paints",paints)
-    parent.set_meta("lamps",lamps)
+    fleet.build(parent,kind,parent==car)
     if parent==car: _vehicle_accessories(parent)
 
 func _vehicle_accessories(parent: Node3D):
     for side in [-1,1]:
         var beam:=SpotLight3D.new()
         beam.name="BeamLeft" if side<0 else "BeamRight"
-        beam.position=Vector3(side*fleet.WIDTHS[vehicle_kind]*0.3,0.85,fleet.LENGTHS[vehicle_kind]/2)
+        beam.position=Vector3(side*fleet.WIDTHS[vehicle_kind]*0.35,0.55 if vehicle_kind==0 else 0.85,1.9 if vehicle_kind==0 else fleet.LENGTHS[vehicle_kind]/2)
         beam.rotation.y=PI
         beam.spot_range=30
         beam.spot_angle=32
         beam.light_color=Color("fff1cf")
         beam.light_energy=2.5
         parent.add_child(beam)
-        var reverse_lamp=_box(parent,Vector3(side*fleet.WIDTHS[vehicle_kind]*0.3,0.7,-fleet.LENGTHS[vehicle_kind]/2),Vector3(0.18,0.12,0.04),Color("edede3"))
+        var reverse_lamp=_box(parent,Vector3(side*fleet.WIDTHS[vehicle_kind]*0.3,0.36 if vehicle_kind==0 else 0.7,-1.6 if vehicle_kind==0 else -fleet.LENGTHS[vehicle_kind]/2),Vector3(0.18,0.12,0.04),Color("edede3"))
         reverse_lamp.name="ReverseLeft" if side<0 else "ReverseRight"
         reverse_lamp.material_override.emission_enabled=true
 func _actors():
@@ -553,6 +505,7 @@ func _move_traffic(delta: float):
         var next:=route[next_index].lerp(route[next_index+1],fposmod(next_progress,1.0))
         var focus: Vector3=car.position if in_car else player.position
         if Vector2(next.x-focus.x,next.z-focus.z).length()>4 and not features.stop_traffic(progress,next):
+            fleet.animate(vehicle,vehicle.position.distance_to(next),0)
             vehicle.position=next
             vehicle.set_meta("progress",next_progress)
         var direction:=route[next_index+1]-route[next_index]
@@ -669,7 +622,7 @@ func _drive(delta: float, steering: float, throttle: float, braking: bool, rever
             car_speed=0
             break
         car.position=next
-        for wheel in car.get_meta("wheel_nodes",[]): wheel.rotation.x+=car_speed*step/0.4
+        fleet.animate(car,car_speed*step,steering)
 
 func _update_controls():
     _stop_horn()
@@ -703,8 +656,9 @@ func _unhandled_input(event):
 
 func _update_camera(focus: Vector3, delta: float):
     _orbit(camera_turn*delta*1.5,0)
-    var distance:=12.0 if in_car else 9.0
-    var offset:=Vector3(sin(camera_angle)*cos(camera_pitch),sin(camera_pitch),cos(camera_angle)*cos(camera_pitch))*distance
+    var distance: float=8.0+maxf(0,fleet.LENGTHS[vehicle_kind]-4.2)*0.5 if in_car else 9.0
+    var heading: float=camera_angle+car.rotation.y+PI if in_car else camera_angle
+    var offset:=Vector3(sin(heading)*cos(camera_pitch),sin(camera_pitch),cos(heading)*cos(camera_pitch))*distance
     var origin:=focus+Vector3(0,1.4,0)
     var desired:=origin+offset
     var query:=PhysicsRayQueryParameters3D.create(origin,desired)
